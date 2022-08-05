@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   const [loading, setLoading] = useState(true);
 
   const ethosConfiguration = {
-    walletAppUrl: 'http://localhost:3000',
+    // walletAppUrl: 'http://localhost:3000',
     appId: 'ethos-example',
   }
 
