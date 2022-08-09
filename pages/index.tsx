@@ -11,7 +11,7 @@ const Home: NextPage = () => {
   const [walletBalance, setWalletBalance] = useState('');
 
   const ethosConfiguration = {
-    walletAppUrl: 'http://localhost:3000',
+    // walletAppUrl: 'http://localhost:3000',
     appId: 'ethos-example',
   }
 
