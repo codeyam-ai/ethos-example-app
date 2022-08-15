@@ -159,6 +159,20 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.4.tgz#0c8b74c50f29ee44f423f7416829c0bf8bb5eb27"
   integrity sha512-LwzQKA4vzIct1zNZzBmRKI9QuNpLgTQMEjsQLf3BXuGYb3QPTP4Yjf6mkdX+X1mYttZ808QpOwAzZjv28kq7DA==
 
+"@superstate/core@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@superstate/core/-/core-0.1.0.tgz#7f0f657d08298c7b0b199e85dabaa3a6aabee145"
+  integrity sha512-AQPYDdd8MYZblK3LyRGp8g7QiknqUYCyZoxfcqkt5UX9vElP85vzWZQDe+K9muxjZxFwCbF+o3TC6RAUvcsrQQ==
+  dependencies:
+    fast-deep-equal "^3.1.3"
+
+"@superstate/react@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@superstate/react/-/react-0.1.0.tgz#fb0cb02b8ad3651287a8b698b78d58a235d2872b"
+  integrity sha512-tCf2FJ/2BN8ifjlXaH5YX/n8k+T+WnYqC3HbtvijusQKe7RqhasRKUpvp0fzDhH8k9fW+hXDplr6aE9jvX1mBw==
+  dependencies:
+    "@superstate/core" "^0.1.0"
+
 "@swc/helpers@0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.4.3.tgz#16593dfc248c53b699d4b5026040f88ddb497012"
@@ -899,11 +913,12 @@ esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-ethos-wallet-beta@^0.0.113:
-  version "0.0.113"
-  resolved "https://registry.yarnpkg.com/ethos-wallet-beta/-/ethos-wallet-beta-0.0.113.tgz#cdc0bf0cb8dc5ef8922c0410c0fcbfd5f3bbce70"
-  integrity sha512-nVWPKN0Q7+l/Je66LgdOMw6Xiu/IRX2vC/q8rDI53sAx8Dp4xwxlYz6e7N/jP3kjO4NIcWG5eUMbKYkItBcA5w==
+ethos-wallet-beta@^0.0.140:
+  version "0.0.140"
+  resolved "https://registry.yarnpkg.com/ethos-wallet-beta/-/ethos-wallet-beta-0.0.140.tgz#1a8676050c43e14df9c53757a39a35a66ed37db7"
+  integrity sha512-t3Fu3/vnQoyc4ZNjBHGyxfefrD7jQp1aiBjmz/CochIWjIGtFQpMMWxoFGA7bFw0fb1RtGO7VBPcA5doSMAmMQ==
   dependencies:
+    "@superstate/react" "^0.1.0"
     qrcode "^1.5.1"
     react-google-recaptcha "^2.1.0"
     store2 "^2.13.2"
