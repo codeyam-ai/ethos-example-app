@@ -7,11 +7,11 @@ const Home: NextPage = () => {
   const [signer, setSigner] = useState<any>(undefined);
   const [loading, setLoading] = useState(true);
   const [address, setAddress] = useState('');
-  const [emailSent, setEmailSent] = useState(false);
   const [walletBalance, setWalletBalance] = useState('');
 
   const ethosConfiguration = {
-    // walletAppUrl: 'http://localhost:3000',
+    // When testing, use our staging link. When in production you may comment this line out.
+    walletAppUrl: 'https://sui-wallet-staging.onrender.com',
     appId: 'ethos-example',
   }
 
