@@ -5,7 +5,6 @@ import { RefreshIcon } from '@heroicons/react/solid';
 
 const Home: NextPage = () => {
   const [signer, setSigner] = useState<any>(undefined);
-  const [loading, setLoading] = useState(true);
   const [address, setAddress] = useState('');
   const [walletBalance, setWalletBalance] = useState('');
 
@@ -34,9 +33,7 @@ const Home: NextPage = () => {
   }
 
   const fund = async () => {
-    setLoading(true);
     await ethos.dripSui({ address })
-    setLoading(false);
   }
 
   const mint = async () => {
@@ -64,7 +61,7 @@ const Home: NextPage = () => {
         onSigned: () => console.log('tx signed'),
         onCanceled: () => console.log('tx cancelled'),
         onSent: () => console.log('tx sent'),
-        onComplete: async (result) => {
+        onCompleted: async (result: any) => {
           await result;
           console.log("COMPLETED RESULT", result)
           ethos.hideWallet();
@@ -75,84 +72,70 @@ const Home: NextPage = () => {
     }
   }
 
-  useEffect(() => {
-    setLoading(false)
-  }, []);
-
-  const logInView = loading ? (
-    <p>Loading...</p>
-  ) : (
-    <SignInButton
-      className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-    >
-      Connect
-    </SignInButton>
-  )
-
-  const appView = (
-    <>
-      <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-        Connected to wallet
-      </h2>
-      <p><code>{address}</code></p>
-      <p>
-        <span className="inline-flex items-center text-base font-medium text-ethos-primary space-x-1">
-          <span>Wallet balance: <code>{walletBalance}</code></span>
-          <RefreshIcon
-            className="h-5 w-5  text-blue-500 cursor-pointer"
-            aria-hidden="true"
-            onClick={() => refreshWalletBalance(address)}
-          />
-        </span>
-      </p>
-      <p className='py-4'>
-        First, fund this wallet from the Sui faucet:
-      </p>
-      <button
-        className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-        onClick={fund}
-      >
-        Fund
-      </button>
-      <p className='py-4'>
-        then
-      </p>
-      <button
-        className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-        onClick={mint}
-      >
-        Mint an NFT
-      </button>
-      <p className='py-4'>
-        or
-      </p>
-      <div>
-        <button
-          className="mx-2 inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-          onClick={ethos.showWallet}
-        >
-          Show wallet
-        </button>
-        <button
-          className="mx-2 inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-          onClick={onLogout}
-        >
-          Sign Out
-        </button>
-      </div>
-    </>
-  )
-
   return (
     <EthosWrapper
       ethosConfiguration={ethosConfiguration}
       onWalletConnected={({ provider, signer }) => onWalletConnected(provider, signer)}>
       <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
         {
-          loading ? (
-            <p>Loading...</p>
+          !signer ? (
+            <SignInButton
+              className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+            >
+              Connect
+            </SignInButton>
           ) : (
-            signer ? appView : logInView
+            <>
+              <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                Connected to wallet
+              </h2>
+              <p><code>{address}</code></p>
+              <p>
+                <span className="inline-flex items-center text-base font-medium text-ethos-primary space-x-1">
+                  <span>Wallet balance: <code>{walletBalance}</code></span>
+                  <RefreshIcon
+                    className="h-5 w-5  text-blue-500 cursor-pointer"
+                    aria-hidden="true"
+                    onClick={() => refreshWalletBalance(address)}
+                  />
+                </span>
+              </p>
+              <p className='py-4'>
+                First, fund this wallet from the Sui faucet:
+              </p>
+              <button
+                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                onClick={fund}
+              >
+                Fund
+              </button>
+              <p className='py-4'>
+                then
+              </p>
+              <button
+                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                onClick={mint}
+              >
+                Mint an NFT
+              </button>
+              <p className='py-4'>
+                or
+              </p>
+              <div>
+                <button
+                  className="mx-2 inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                  onClick={ethos.showWallet}
+                >
+                  Show wallet
+                </button>
+                <button
+                  className="mx-2 inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                  onClick={onLogout}
+                >
+                  Sign Out
+                </button>
+              </div>
+            </>
           )
         }
       </div>

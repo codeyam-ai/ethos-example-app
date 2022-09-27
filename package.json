@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
-    "ethos-wallet-beta": "^0.0.140",
+    "ethos-wallet-beta": "^0.0.159",
     "next": "12.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
