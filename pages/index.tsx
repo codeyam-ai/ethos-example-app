@@ -5,6 +5,7 @@ import { RefreshIcon } from '@heroicons/react/solid';
 
 const Home: NextPage = () => {
   const [signer, setSigner] = useState<any>(undefined);
+  const [loading, setLoading] = useState(true);
   const [address, setAddress] = useState('');
   const [walletBalance, setWalletBalance] = useState('');
 
@@ -33,7 +34,9 @@ const Home: NextPage = () => {
   }
 
   const fund = async () => {
+    setLoading(true);
     await ethos.dripSui({ address })
+    setLoading(false);
   }
 
   const mint = async () => {
@@ -70,6 +73,14 @@ const Home: NextPage = () => {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  useEffect(() => {
+    setLoading(false)
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
   return (
