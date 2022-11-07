@@ -1,8 +1,26 @@
+import { EthosConnectProvider } from 'ethos-connect';
+import ExampleIcon from '../icons/ExampleIcon';
+
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+    const ethosConfiguration = {
+        // When testing, use our staging link. When in production you may comment this line out.
+        // walletAppUrl: 'https://sui-wallet-staging.onrender.com',
+        apiKey: 'ethos-example-app',
+    }
+
+    return (
+        <EthosConnectProvider
+            ethosConfiguration={ethosConfiguration}
+            dappName='EthosConnect Example App'
+            dappIcon={<ExampleIcon />}
+            connectMessage='Your connect message goes here!'
+        >
+            <Component {...pageProps} />
+        </EthosConnectProvider>
+    );
 }
 
 export default MyApp

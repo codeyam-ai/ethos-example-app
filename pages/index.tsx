@@ -1,52 +1,15 @@
 import type { NextPage } from 'next'
-import { EthosConnectProvider, SignInButton, ethos } from 'ethos-connect';
-import { useCallback, useEffect, useState } from 'react';
-import { RefreshIcon } from '@heroicons/react/solid';
-import ExampleIcon from '../icons/ExampleIcon';
+import { SignInButton, ethos } from 'ethos-connect';
+import { useState } from 'react';
 
 const Home: NextPage = () => {
   const contractAddress = '0x0000000000000000000000000000000000000002';
-  const [signer, setSigner] = useState<any>(undefined);
   const [loading, setLoading] = useState(false);
-  const [address, setAddress] = useState('');
-  const [walletBalance, setWalletBalance] = useState('');
-
   const { connected, connecting, wallet } = ethos.useWallet()
-  const { contents } = ethos.useContents();
-
-  const ethosConfiguration = {
-    // When testing, use our staging link. When in production you may comment this line out.
-    // walletAppUrl: 'https://sui-wallet-staging.onrender.com',
-    appId: 'ethos-example-app',
-  }
-
-  const onWalletConnected = async (provider: any, signer: any) => {
-    console.log('wallet :>> ', wallet);
-    if (signer) {
-      setSigner(signer);
-      // const address = await getAddress();
-      setAddress(address);
-      refreshWalletBalance(address)
-      console.log('contents :>> ', contents);
-      const walletContents = await ethos.getWalletContents(address);
-      console.log('ethos.getWalletContents() :>> ', walletContents);
-    }
-  }
-
-  const onLogout = () => {
-    ethos.logout(signer);
-    setSigner(undefined);
-  }
-
-  const refreshWalletBalance = async (address: string) => {
-    setWalletBalance('...');
-    const walletContents = await ethos.getWalletContents(address);
-    setWalletBalance(walletContents.suiBalance.toString());
-  }
 
   const fund = async () => {
     setLoading(true);
-    await ethos.dripSui({ address })
+    await ethos.dripSui({ address: wallet.address })
     setLoading(false);
   }
 
@@ -68,8 +31,7 @@ const Home: NextPage = () => {
         }
       };
 
-      ethos.transact({
-        signer,
+      wallet.signAndExecuteTransaction({
         signableTransaction,
       })
     } catch (error) {
@@ -78,20 +40,14 @@ const Home: NextPage = () => {
   }
 
   return (
-    <EthosConnectProvider
-      ethosConfiguration={ethosConfiguration}
-      onWalletConnected={({ provider, signer }) => onWalletConnected(provider, signer)}
-      dappName='EthosConnect Example App'
-      dappIcon={<ExampleIcon />}
-      connectMessage='Your connect message goes here!'
-    >
+    <div>
       Connected: {connected ? 'true' : 'false'}
       <br />
       Connecting: {connecting ? 'true' : 'false'}
 
       <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
         {
-          !signer ? (
+          !wallet ? (
             <SignInButton
               className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
             >
@@ -103,14 +59,9 @@ const Home: NextPage = () => {
                 <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
                   Connected to wallet
                 </h2>
-                <code>{address}</code>
+                <code>{wallet.address}</code>
                 <div className="flex flex-row place-content-center text-base font-medium text-ethos-primary space-x-1">
-                  <span>Wallet balance: <code>{wallet}</code></span>
-                  <RefreshIcon
-                    className="h-5 w-5  text-blue-500 cursor-pointer"
-                    aria-hidden="true"
-                    onClick={() => refreshWalletBalance(address)}
-                  />
+                  <span>Wallet balance: <code>{wallet.contents?.suiBalance}</code></span>
                 </div>
               </div>
               <div className='flex flex-col gap-4'>
@@ -131,7 +82,7 @@ const Home: NextPage = () => {
                 or
                 <button
                   className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                  onClick={onLogout}
+                  onClick={wallet.disconnect}
                 >
                   Sign Out
                 </button>
@@ -140,7 +91,7 @@ const Home: NextPage = () => {
           )
         }
       </div>
-    </EthosConnectProvider>
+    </div>
   )
 }
 
