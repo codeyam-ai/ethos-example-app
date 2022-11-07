@@ -1,19 +1,23 @@
 import type { NextPage } from 'next'
 import { SignInButton, ethos } from 'ethos-connect';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 const Home: NextPage = () => {
   const contractAddress = '0x0000000000000000000000000000000000000002';
   const [loading, setLoading] = useState(false);
-  const { connecting, noConnection, connected, wallet } = ethos.useWallet()
+  const { status, wallet } = ethos.useWallet()
 
-  const fund = async () => {
+  const fund = useCallback(async () => {
+    if (!wallet) return;
+
     setLoading(true);
     await ethos.dripSui({ address: wallet.address })
     setLoading(false);
-  }
+  }, [wallet]);
 
-  const mint = async () => {
+  const mint = useCallback(async () => {
+    if (!wallet) return;
+
     try {
       const signableTransaction = {
         kind: "moveCall" as const,
@@ -31,21 +35,15 @@ const Home: NextPage = () => {
         }
       };
 
-      wallet.signAndExecuteTransaction({
-        signableTransaction,
-      })
+      wallet.signAndExecuteTransaction(signableTransaction)
     } catch (error) {
       console.log(error);
     }
-  }
+  }, [wallet]);
 
   return (
     <div>
-      Connected: {connected ? 'true' : 'false'}
-      <br />
-      No Connection: {noConnection ? 'true' : 'false'}
-      <br />
-      Connecting: {connecting ? 'true' : 'false'}
+      Status: {status}
 
       <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
         {
