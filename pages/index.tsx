@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { EthosWrapper, SignInButton, ethos } from 'ethos-connect';
+import { EthosConnectProvider, SignInButton, ethos } from 'ethos-connect';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshIcon } from '@heroicons/react/solid';
 import ExampleIcon from '../icons/ExampleIcon';
@@ -11,9 +11,8 @@ const Home: NextPage = () => {
   const [address, setAddress] = useState('');
   const [walletBalance, setWalletBalance] = useState('');
 
-  const { connected, connecting, getAddress } = ethos.useSuiWalletConnect()
+  const { connected, connecting, wallet } = ethos.useWallet()
   const { contents } = ethos.useContents();
-
 
   const ethosConfiguration = {
     // When testing, use our staging link. When in production you may comment this line out.
@@ -22,9 +21,10 @@ const Home: NextPage = () => {
   }
 
   const onWalletConnected = async (provider: any, signer: any) => {
+    console.log('wallet :>> ', wallet);
     if (signer) {
       setSigner(signer);
-      const address = await getAddress();
+      // const address = await getAddress();
       setAddress(address);
       refreshWalletBalance(address)
       console.log('contents :>> ', contents);
@@ -78,16 +78,16 @@ const Home: NextPage = () => {
   }
 
   return (
-    <EthosWrapper
+    <EthosConnectProvider
       ethosConfiguration={ethosConfiguration}
       onWalletConnected={({ provider, signer }) => onWalletConnected(provider, signer)}
       dappName='EthosConnect Example App'
       dappIcon={<ExampleIcon />}
       connectMessage='Your connect message goes here!'
     >
-      {/* Connected: {connected ? 'true' : 'false'}
+      Connected: {connected ? 'true' : 'false'}
       <br />
-      Connecting: {connecting ? 'true' : 'false'} */}
+      Connecting: {connecting ? 'true' : 'false'}
 
       <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
         {
@@ -105,7 +105,7 @@ const Home: NextPage = () => {
                 </h2>
                 <code>{address}</code>
                 <div className="flex flex-row place-content-center text-base font-medium text-ethos-primary space-x-1">
-                  <span>Wallet balance: <code>{walletBalance}</code></span>
+                  <span>Wallet balance: <code>{wallet}</code></span>
                   <RefreshIcon
                     className="h-5 w-5  text-blue-500 cursor-pointer"
                     aria-hidden="true"
@@ -140,7 +140,7 @@ const Home: NextPage = () => {
           )
         }
       </div>
-    </EthosWrapper>
+    </EthosConnectProvider>
   )
 }
 
