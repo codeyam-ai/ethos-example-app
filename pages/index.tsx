@@ -5,7 +5,7 @@ import { useState } from 'react';
 const Home: NextPage = () => {
   const contractAddress = '0x0000000000000000000000000000000000000002';
   const [loading, setLoading] = useState(false);
-  const { connected, connecting, wallet } = ethos.useWallet()
+  const { connecting, noConnection, connected, wallet } = ethos.useWallet()
 
   const fund = async () => {
     setLoading(true);
@@ -42,6 +42,8 @@ const Home: NextPage = () => {
   return (
     <div>
       Connected: {connected ? 'true' : 'false'}
+      <br />
+      No Connection: {noConnection ? 'true' : 'false'}
       <br />
       Connecting: {connecting ? 'true' : 'false'}
 
