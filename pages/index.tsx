@@ -4,16 +4,23 @@ import { useCallback, useState } from "react";
 
 const Home: NextPage = () => {
   const contractAddress = "0x0000000000000000000000000000000000000002";
-  const [loading, setLoading] = useState(false);
+  const [funding, setFunding] = useState(false);
+  const [fundingError, setFundingError] = useState(false);
   const { status, wallet } = ethos.useWallet();
 
   const fund = useCallback(async () => {
-    if (!wallet) return;
+    if (!wallet || funding) return;
 
-    setLoading(true);
-    await ethos.dripSui({ address: wallet.address });
-    setLoading(false);
-  }, [wallet]);
+    setFunding(true);
+    setFundingError(false);
+    try {
+        await ethos.dripSui({ address: wallet.address });
+    } catch (e) {
+        console.log("Error", e)
+        setFundingError(true);
+    }
+    setFunding(false);
+  }, [wallet, funding]);
 
   const mint = useCallback(async () => {
     if (!wallet) return;
@@ -40,6 +47,10 @@ const Home: NextPage = () => {
       console.log(error);
     }
   }, [wallet]);
+
+  const reset = useCallback(() => {
+    setFundingError(false)
+  }, []);
 
   return (
     <div className="relative">
@@ -68,12 +79,23 @@ const Home: NextPage = () => {
               </div>
             </div>
             <div className="flex flex-col gap-4">
+              {fundingError && (
+                <div className='p-3 bg-red-200 text-sm text-center relative'>
+                  <div 
+                    className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-3 right-3'
+                    onClick={reset}
+                  >
+                    ✕
+                  </div>
+                  The faucet did not work. Please try again in a little bit.
+                </div>
+              )}
               First, fund this wallet from the Sui faucet:
               <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={fund}
               >
-                Fund
+                {funding ? <>Funding...</> : <>Fund</>}
               </button>
               then
               <button
