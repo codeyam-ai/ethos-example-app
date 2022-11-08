@@ -53,7 +53,7 @@ const Home: NextPage = () => {
         ) : (
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
                 Connected to wallet
               </h2>
               <code>{wallet.address}</code>
