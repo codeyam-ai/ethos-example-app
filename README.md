@@ -2,7 +2,7 @@
 
 This is a [Next.js](https://nextjs.org/) app written with [TypeScript](https://www.typescriptlang.org/) implementing [EthosConnect](ethoswallet.xyz/dev), the easiest way to connect with any wallet on Sui.
 
-For a start to finish guide, check out the [EthosConnect docs](docs.ethoswallet.xyz).
+For a start to finish guide, check out the [EthosConnect docs](https://docs.ethoswallet.xyz).
 
 ---
 
