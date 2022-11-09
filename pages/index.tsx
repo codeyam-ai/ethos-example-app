@@ -4,9 +4,12 @@ import { useCallback, useState } from "react";
 
 const Home: NextPage = () => {
   const contractAddress = "0x0000000000000000000000000000000000000002";
-  const [funding, setFunding] = useState(false);
-  const [fundingError, setFundingError] = useState(false);
   const { status, wallet } = ethos.useWallet();
+
+  const [funding, setFunding] = useState(false);
+  const [fundingSuccess, setFundingSuccess] = useState(false);
+  const [fundingError, setFundingError] = useState(false);
+  const [nftObjectId, setNftObjectId] = useState(null);
 
   const fund = useCallback(async () => {
     if (!wallet || funding) return;
@@ -15,6 +18,7 @@ const Home: NextPage = () => {
     setFundingError(false);
     try {
         await ethos.dripSui({ address: wallet.address });
+        setFundingSuccess(true);
     } catch (e) {
         console.log("Error", e)
         setFundingError(true);
@@ -34,22 +38,28 @@ const Home: NextPage = () => {
           function: "mint",
           typeArguments: [],
           arguments: [
-            "Example NFT Name",
-            "This is a description",
+            "Ethos Example NFT",
+            "A sample NFT from Ethos Wallet.",
             "https://ethoswallet.xyz/assets/images/ethos-email-logo.png",
           ],
           gasBudget: 10000,
         },
       };
 
-      wallet.signAndExecuteTransaction(signableTransaction);
+      const response = await wallet.signAndExecuteTransaction(signableTransaction);
+      if (response?.effects?.events) {
+        const { moveEvent } = response.effects.events.find((e) => e.moveEvent);
+        setNftObjectId(moveEvent.fields.object_id)
+      }  
     } catch (error) {
       console.log(error);
     }
   }, [wallet]);
 
   const reset = useCallback(() => {
-    setFundingError(false)
+    setFundingError(false);
+    setFundingSuccess(false);
+    setNftObjectId(null);
   }, []);
 
   return (
@@ -91,6 +101,19 @@ const Home: NextPage = () => {
                 </div>
               )}
               First, fund this wallet from the Sui faucet:
+              {fundingSuccess && (
+                <div className='p-3 bg-green-200 text-sm text-center relative'>
+                    <div 
+                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-3 right-3'
+                        onClick={reset}
+                    >
+                        ✕
+                    </div>
+                    <b>Success!</b>
+                    &nbsp; &nbsp;
+                    Your new balance is {wallet.contents?.suiBalance} Mist!
+                </div>
+              )}
               <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={fund}
@@ -98,6 +121,26 @@ const Home: NextPage = () => {
                 {funding ? <>Funding...</> : <>Fund</>}
               </button>
               then
+              {nftObjectId && (
+                <div className='p-3 bg-green-200 text-sm text-center relative'>
+                    <div 
+                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-3 right-3'
+                        onClick={reset}
+                    >
+                        ✕
+                    </div>
+                    <b>Success!</b>
+                    &nbsp; &nbsp;
+                    <a 
+                        href={`https://explorer.devnet.sui.io/objects/${nftObjectId}`}
+                        target="_blank" 
+                        rel="noreferrer"
+                        className='underline font-blue-600' 
+                    >
+                        View Your NFT on the DevNet Explorer 
+                    </a>
+                </div>
+              )}
               <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={mint}
