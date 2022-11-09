@@ -62,6 +62,11 @@ const Home: NextPage = () => {
     setNftObjectId(null);
   }, []);
 
+  const disconnect = useCallback(() => {
+    reset();
+    wallet?.disconnect();
+  }, [reset, wallet])
+
   return (
     <div className="relative">
       <div className="absolute top-12 left-12">Status: {status}</div>
@@ -150,7 +155,7 @@ const Home: NextPage = () => {
               or
               <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                onClick={wallet.disconnect}
+                onClick={disconnect}
               >
                 Sign Out
               </button>
