@@ -31,7 +31,7 @@ const Home: NextPage = () => {
 
     try {
       const signableTransaction = {
-        kind: "moveCall" as const,
+        kind: "moveCall",
         data: {
           packageObjectId: contractAddress,
           module: "devnet_nft",
@@ -68,10 +68,10 @@ const Home: NextPage = () => {
   }, [reset, wallet])
 
   return (
-    <div className="relative">
-      <div className="absolute top-12 left-12">Status: {status}</div>
+    <div className="flex justify-between items-start">
+      <div className="p-12 flex-1">Status: {status}</div>
 
-      <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+      <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8 flex-6">
         {!wallet ? (
           <SignInButton className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
             Connect
@@ -162,6 +162,10 @@ const Home: NextPage = () => {
             </div>
           </div>
         )}
+      </div>
+
+      <div className="p-12 flex-1 flex justify-end">
+        <ethos.components.AddressWidget />
       </div>
     </div>
   );
