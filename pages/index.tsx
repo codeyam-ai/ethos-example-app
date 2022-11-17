@@ -11,6 +11,7 @@ const Home: NextPage = () => {
   const [fundingError, setFundingError] = useState(false);
   const [nftObjectId, setNftObjectId] = useState(null);
   const [signSuccess, setSignSuccess] = useState(false);
+  const [signError, setSignError] = useState(false);
 
   const fund = useCallback(async () => {
     if (!wallet || funding) return;
@@ -59,8 +60,13 @@ const Home: NextPage = () => {
 
   const sign = useCallback(async () => {
     const response = await wallet?.sign({ message: "Hello" });
-    console.log("RESPONSE", response)
-    setSignSuccess(true);
+    if (!response) {
+        setSignError(true);
+    } else {
+        console.log("Sign result: ", response)
+        setSignSuccess(true);
+    }
+    
   }, [wallet]);
 
   const reset = useCallback(() => {
@@ -68,6 +74,7 @@ const Home: NextPage = () => {
     setFundingSuccess(false);
     setNftObjectId(null);
     setSignSuccess(false);
+    setSignError(false);
   }, []);
 
   const disconnect = useCallback(() => {
@@ -102,6 +109,7 @@ const Home: NextPage = () => {
               </div>
             </div>
             <div className="flex flex-col gap-4">
+              First, fund this wallet from the Sui faucet:
               {fundingError && (
                 <div className='p-3 pr-12 bg-red-200 text-sm text-center relative'>
                   <div 
@@ -113,7 +121,6 @@ const Home: NextPage = () => {
                   The faucet did not work. Please try again in a little bit.
                 </div>
               )}
-              First, fund this wallet from the Sui faucet:
               {fundingSuccess && (
                 <div className='p-3 pr-12 bg-green-200 text-sm text-center relative'>
                     <div 
@@ -172,6 +179,17 @@ const Home: NextPage = () => {
                     <b>Success!</b>
                     &nbsp;
                     Check the developer console to see the result.
+                </div>
+              )}
+              {signError && (
+                <div className='p-3 pr-12 bg-red-200 text-sm text-center relative'>
+                  <div 
+                    className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
+                    onClick={reset}
+                  >
+                    ✕
+                  </div>
+                  Signing did not work. See the developer console for additional information.
                 </div>
               )}
               <button
