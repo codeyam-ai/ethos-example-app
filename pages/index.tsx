@@ -10,6 +10,7 @@ const Home: NextPage = () => {
   const [fundingSuccess, setFundingSuccess] = useState(false);
   const [fundingError, setFundingError] = useState(false);
   const [nftObjectId, setNftObjectId] = useState(null);
+  const [signSuccess, setSignSuccess] = useState(false);
 
   const fund = useCallback(async () => {
     if (!wallet || funding) return;
@@ -56,10 +57,17 @@ const Home: NextPage = () => {
     }
   }, [wallet]);
 
+  const sign = useCallback(async () => {
+    const response = await wallet?.sign({ message: "Hello" });
+    console.log("RESPONSE", response)
+    setSignSuccess(true);
+  }, [wallet]);
+
   const reset = useCallback(() => {
     setFundingError(false);
     setFundingSuccess(false);
     setNftObjectId(null);
+    setSignSuccess(false);
   }, []);
 
   const disconnect = useCallback(() => {
@@ -95,9 +103,9 @@ const Home: NextPage = () => {
             </div>
             <div className="flex flex-col gap-4">
               {fundingError && (
-                <div className='p-3 bg-red-200 text-sm text-center relative'>
+                <div className='p-3 pr-12 bg-red-200 text-sm text-center relative'>
                   <div 
-                    className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-3 right-3'
+                    className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
                     onClick={reset}
                   >
                     ✕
@@ -107,9 +115,9 @@ const Home: NextPage = () => {
               )}
               First, fund this wallet from the Sui faucet:
               {fundingSuccess && (
-                <div className='p-3 bg-green-200 text-sm text-center relative'>
+                <div className='p-3 pr-12 bg-green-200 text-sm text-center relative'>
                     <div 
-                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-3 right-3'
+                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
                         onClick={reset}
                     >
                         ✕
@@ -127,9 +135,9 @@ const Home: NextPage = () => {
               </button>
               then
               {nftObjectId && (
-                <div className='p-3 bg-green-200 text-sm text-center relative'>
+                <div className='p-3 pr-12 bg-green-200 text-sm text-center relative'>
                     <div 
-                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-3 right-3'
+                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
                         onClick={reset}
                     >
                         ✕
@@ -151,6 +159,26 @@ const Home: NextPage = () => {
                 onClick={mint}
               >
                 Mint an NFT
+              </button>
+              or
+              {signSuccess && (
+                <div className='p-3 pr-12 bg-green-200 text-sm text-center relative'>
+                    <div 
+                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
+                        onClick={reset}
+                    >
+                        ✕
+                    </div>
+                    <b>Success!</b>
+                    &nbsp;
+                    Check the developer console to see the result.
+                </div>
+              )}
+              <button
+                className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                onClick={sign}
+              >
+                Sign the message &quot;Hello&quot;
               </button>
               or
               <button
