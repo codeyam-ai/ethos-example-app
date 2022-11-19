@@ -3,7 +3,6 @@ import { SignInButton, ethos } from "ethos-connect";
 import { useCallback, useState } from "react";
 
 const Home: NextPage = () => {
-  const contractAddress = "0x0000000000000000000000000000000000000002";
   const { status, wallet } = ethos.useWallet();
 
   const [funding, setFunding] = useState(false);
@@ -35,7 +34,7 @@ const Home: NextPage = () => {
       const signableTransaction = {
         kind: "moveCall" as const,
         data: {
-          packageObjectId: contractAddress,
+          packageObjectId: "0x0000000000000000000000000000000000000002",
           module: "devnet_nft",
           function: "mint",
           typeArguments: [],
