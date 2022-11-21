@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { PrimaryButton, Sign, Transfer} from '.';
+import { PrimaryButton, Modify, MergeCoins, Sign, Transfer} from '.';
 
 const WalletActions = ({ version, reset }: { version: number, reset: () => void }) => {
     const [showActions, setShowActions] = useState(false);
@@ -20,6 +20,14 @@ const WalletActions = ({ version, reset }: { version: number, reset: () => void 
                         reset={reset}
                     />
                     <Transfer
+                        version={version}
+                        reset={reset}
+                    />
+                    <Modify
+                        version={version}
+                        reset={reset}
+                    />
+                    <MergeCoins
                         version={version}
                         reset={reset}
                     />

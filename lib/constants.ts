@@ -1,0 +1,1 @@
+export const SUI_8192_CONTRACT = "0xabf452a984499834cc26acfbfd9cf86c66500583"

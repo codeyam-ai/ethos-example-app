@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect'
+import { ErrorMessage, SuccessMessage } from '.';
 
 const Fund = ({ version, reset }: { version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
@@ -23,46 +24,23 @@ const Fund = ({ version, reset }: { version: number, reset: () => void }) => {
         setFunding(false);
     }, [wallet, funding]);
 
-    const _localReset = useCallback(() => {
+    useEffect(() => {
         setFunding(false);
         setFundingSuccess(false);
         setFundingError(false);
-    }, [])
-
-    const _reset = useCallback(() => {
-        _localReset();
-        reset();
-    }, [_localReset, reset])
-
-    useEffect(() => {
-        _localReset();
-    }, [_localReset, version])
+    }, [version])
 
     return (
-        <>
+        <div className='flex flex-col gap-6'>
             {fundingError && (
-                <div className='p-3 pr-12 bg-red-200 text-sm text-center relative'>
-                <div 
-                    className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
-                    onClick={reset}
-                >
-                    ✕
-                </div>
-                The faucet did not work. Please try again in a little bit.
-                </div>
+                <ErrorMessage reset={reset}>
+                    The faucet did not work. Please try again in a little bit.
+                </ErrorMessage>
             )}
             {fundingSuccess && (
-                <div className='p-3 pr-12 bg-green-200 text-sm text-center relative'>
-                    <div 
-                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
-                        onClick={_reset}
-                    >
-                        ✕
-                    </div>
-                    <b>Success!</b>
-                    &nbsp; &nbsp;
+                <SuccessMessage reset={reset}>
                     Your new balance is {wallet?.contents?.suiBalance} Mist!
-                </div>
+                </SuccessMessage>
             )}
             <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
@@ -70,7 +48,7 @@ const Fund = ({ version, reset }: { version: number, reset: () => void }) => {
             >
                 {funding ? <>Funding...</> : <>Fund</>}
             </button>
-        </>
+        </div>
     )
 }
 

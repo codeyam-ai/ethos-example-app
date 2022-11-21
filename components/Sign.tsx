@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect';
+import { ErrorMessage, SuccessMessage } from '.';
 
 const Sign = ({ version, reset }: {  version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
@@ -18,45 +19,22 @@ const Sign = ({ version, reset }: {  version: number, reset: () => void }) => {
         
     }, [wallet]);
 
-    const _localReset = useCallback(() => {
+    useEffect(() => {
         setSignSuccess(false);
         setSignError(false);
-    }, [])
-
-    const _reset = useCallback(() => {
-        _localReset();
-        reset();
-    }, [_localReset, reset])
-
-    useEffect(() => {
-        _localReset();
-    }, [_localReset, version])
+    }, [version])
 
     return (
-        <>
+        <div className='flex flex-col gap-6'>
             {signSuccess && (
-                <div className='p-3 pr-12 bg-green-200 text-sm text-center relative'>
-                    <div 
-                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
-                        onClick={reset}
-                    >
-                        ✕
-                    </div>
-                    <b>Success!</b>
-                    &nbsp;
+                <SuccessMessage reset={reset}>
                     Check the developer console to see the result.
-                </div>
+                </SuccessMessage>
             )}
             {signError && (
-                <div className='p-3 pr-12 bg-red-200 text-sm text-center relative'>
-                <div 
-                    className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
-                    onClick={_reset}
-                >
-                    ✕
-                </div>
-                Signing did not work. See the developer console for additional information.
-                </div>
+                <ErrorMessage reset={reset}>
+                    Signing did not work. See the developer console for additional information.
+                </ErrorMessage>
             )}
             <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
@@ -64,7 +42,7 @@ const Sign = ({ version, reset }: {  version: number, reset: () => void }) => {
             >
                 Sign the message &quot;Hello&quot;
             </button>
-          </>
+        </div>
     )
 }
 

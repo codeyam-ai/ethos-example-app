@@ -1,35 +1,51 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect'
-import { SuccessMessage } from '.';
+import { SUI_8192_CONTRACT } from '../lib/constants'
+import SuccessMessage from './SuccessMessage';
 
-const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
+const Modify = ({ version, reset }: { version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState(null);
 
-    const mint = useCallback(async () => {
+    const mintAndTransfer = useCallback(async () => {
         if (!wallet) return;
     
         try {
-          const signableTransaction = {
+          const mintTransaction = {
             kind: "moveCall" as const,
             data: {
-              packageObjectId: "0x0000000000000000000000000000000000000002",
-              module: "devnet_nft",
-              function: "mint",
+              packageObjectId: SUI_8192_CONTRACT,
+              module: "game_8192",
+              function: "create",
               typeArguments: [],
-              arguments: [
-                "Ethos Example NFT",
-                "A sample NFT from Ethos Wallet.",
-                "https://ethoswallet.xyz/assets/images/ethos-email-logo.png",
-              ],
+              arguments: [],
               gasBudget: 10000,
             },
           };
     
-          const response = await wallet.signAndExecuteTransaction(signableTransaction);
+          const response = await wallet.signAndExecuteTransaction(mintTransaction);
           if (response?.effects?.events) {
             const { moveEvent } = response.effects.events.find((e) => e.moveEvent);
-            setNftObjectId(moveEvent.fields.object_id)
+            const objectId = moveEvent.fields.game_id
+
+            const moveTransaction = {
+                kind: "moveCall" as const,
+                data: {
+                  packageObjectId: SUI_8192_CONTRACT,
+                  module: "game_8192",
+                  function: "make_move",
+                  typeArguments: [],
+                  arguments: [
+                    objectId, 
+                    0
+                  ],
+                  gasBudget: 10000,
+                },
+            };
+
+            const moveResponse = await wallet.signAndExecuteTransaction(moveTransaction);
+            console.log("moveResponse", moveResponse)
+            setNftObjectId(objectId);
           }  
         } catch (error) {
           console.log(error);
@@ -53,15 +69,15 @@ const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
                         View Your NFT on the DevNet Explorer 
                     </a>
                 </SuccessMessage>
-            )}
-            <button
+              )}
+              <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                onClick={mint}
-            >
-                Mint an NFT
-            </button>
-        </div>
+                onClick={mintAndTransfer}
+              >
+                Mint and Modify
+              </button>
+          </div>
     )
 }
 
-export default Mint;
+export default Modify;

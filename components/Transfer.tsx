@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect'
+import { SuccessMessage } from '.';
 
 const Transfer = ({ version, reset }: { version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
@@ -48,31 +49,14 @@ const Transfer = ({ version, reset }: { version: number, reset: () => void }) =>
         }
     }, [wallet]);
 
-    const _localReset = useCallback(() => {
-        setNftObjectId(null)
-    }, [])
-
-    const _reset = useCallback(() => {
-        _localReset();
-        reset();
-    }, [_localReset, reset])
-
     useEffect(() => {
-        _localReset();
-    }, [_localReset, version])
+        setNftObjectId(null)
+    }, [version])
 
     return (
-        <>
+        <div className='flex flex-col gap-6'>
             {nftObjectId && (
-                <div className='p-3 pr-12 bg-green-200 text-sm text-center relative'>
-                    <div 
-                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
-                        onClick={_reset}
-                    >
-                        ✕
-                    </div>
-                    <b>Success!</b>
-                    &nbsp; &nbsp;
+                <SuccessMessage reset={reset}>
                     <a 
                         href={`https://explorer.devnet.sui.io/objects/${nftObjectId}`}
                         target="_blank" 
@@ -81,15 +65,15 @@ const Transfer = ({ version, reset }: { version: number, reset: () => void }) =>
                     >
                         View Your NFT on the DevNet Explorer 
                     </a>
-                </div>
-              )}
-              <button
+                </SuccessMessage>
+            )}
+            <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={mintAndTransfer}
-              >
+            >
                 Mint and Transfer
-              </button>
-          </>
+            </button>
+        </div>
     )
 }
 
