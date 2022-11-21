@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { SignInButton, ethos } from "ethos-connect";
 import { useCallback, useEffect, useState } from "react";
-import { Fund, Mint, Sign } from "../components";
+import { Disconnect, Fund, Mint, Sign } from "../components";
 
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
@@ -13,11 +13,6 @@ const Home: NextPage = () => {
   }, []);
 
   useEffect(reset, [wallet?.address, reset])
-
-  const disconnect = useCallback(() => {
-    reset();
-    wallet?.disconnect();
-  }, [reset, wallet])
 
   return (
     <div className="flex justify-between items-start">
@@ -62,12 +57,7 @@ const Home: NextPage = () => {
                 reset={reset}
               />
               or
-              <button
-                className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                onClick={disconnect}
-              >
-                Sign Out
-              </button>
+              <Disconnect reset={reset} />
             </div>
           </div>
         )}
