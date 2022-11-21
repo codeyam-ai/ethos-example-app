@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
-import type { Wallet } from 'ethos-connect';
+import { ethos } from 'ethos-connect';
 
-const Sign = ({ wallet, version, reset }: { wallet: Wallet, version: number, reset: () => void }) => {
+const Sign = ({ version, reset }: {  version: number, reset: () => void }) => {
+    const { wallet } = ethos.useWallet();
+
     const [signSuccess, setSignSuccess] = useState(false);
     const [signError, setSignError] = useState(false);
 
@@ -27,7 +29,6 @@ const Sign = ({ wallet, version, reset }: { wallet: Wallet, version: number, res
     }, [_localReset, reset])
 
     useEffect(() => {
-        console.log("version", version)
         _localReset();
     }, [_localReset, version])
 

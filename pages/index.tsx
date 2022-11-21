@@ -1,66 +1,14 @@
 import type { NextPage } from "next";
 import { SignInButton, ethos } from "ethos-connect";
 import { useCallback, useEffect, useState } from "react";
-import Sign from "../components/Sign";
+import { Fund, Mint, Sign } from "../components";
 
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
 
   const [version, setVersion] = useState<number>(0);
-  const [funding, setFunding] = useState(false);
-  const [fundingSuccess, setFundingSuccess] = useState(false);
-  const [fundingError, setFundingError] = useState(false);
-  const [nftObjectId, setNftObjectId] = useState(null);
-
-  const fund = useCallback(async () => {
-    if (!wallet || funding) return;
-
-    setFunding(true);
-    setFundingError(false);
-    try {
-        await ethos.dripSui({ address: wallet.address });
-        setFundingSuccess(true);
-    } catch (e) {
-        console.log("Error", e)
-        setFundingError(true);
-    }
-    setFunding(false);
-  }, [wallet, funding]);
-
-  const mint = useCallback(async () => {
-    if (!wallet) return;
-
-    try {
-      const signableTransaction = {
-        kind: "moveCall" as const,
-        data: {
-          packageObjectId: "0x0000000000000000000000000000000000000002",
-          module: "devnet_nft",
-          function: "mint",
-          typeArguments: [],
-          arguments: [
-            "Ethos Example NFT",
-            "A sample NFT from Ethos Wallet.",
-            "https://ethoswallet.xyz/assets/images/ethos-email-logo.png",
-          ],
-          gasBudget: 10000,
-        },
-      };
-
-      const response = await wallet.signAndExecuteTransaction(signableTransaction);
-      if (response?.effects?.events) {
-        const { moveEvent } = response.effects.events.find((e) => e.moveEvent);
-        setNftObjectId(moveEvent.fields.object_id)
-      }  
-    } catch (error) {
-      console.log(error);
-    }
-  }, [wallet]);
-
+  
   const reset = useCallback(() => {
-    setFundingError(false);
-    setFundingSuccess(false);
-    setNftObjectId(null);
     setVersion(prev => prev + 1)
   }, []);
 
@@ -99,66 +47,17 @@ const Home: NextPage = () => {
             </div>
             <div className="flex flex-col gap-4">
               First, fund this wallet from the Sui faucet:
-              {fundingError && (
-                <div className='p-3 pr-12 bg-red-200 text-sm text-center relative'>
-                  <div 
-                    className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
-                    onClick={reset}
-                  >
-                    ✕
-                  </div>
-                  The faucet did not work. Please try again in a little bit.
-                </div>
-              )}
-              {fundingSuccess && (
-                <div className='p-3 pr-12 bg-green-200 text-sm text-center relative'>
-                    <div 
-                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
-                        onClick={reset}
-                    >
-                        ✕
-                    </div>
-                    <b>Success!</b>
-                    &nbsp; &nbsp;
-                    Your new balance is {wallet.contents?.suiBalance} Mist!
-                </div>
-              )}
-              <button
-                className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                onClick={fund}
-              >
-                {funding ? <>Funding...</> : <>Fund</>}
-              </button>
+              <Fund
+                version={version}
+                reset={reset}
+              />
               then
-              {nftObjectId && (
-                <div className='p-3 pr-12 bg-green-200 text-sm text-center relative'>
-                    <div 
-                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
-                        onClick={reset}
-                    >
-                        ✕
-                    </div>
-                    <b>Success!</b>
-                    &nbsp; &nbsp;
-                    <a 
-                        href={`https://explorer.devnet.sui.io/objects/${nftObjectId}`}
-                        target="_blank" 
-                        rel="noreferrer"
-                        className='underline font-blue-600' 
-                    >
-                        View Your NFT on the DevNet Explorer 
-                    </a>
-                </div>
-              )}
-              <button
-                className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                onClick={mint}
-              >
-                Mint an NFT
-              </button>
+              <Mint 
+                version={version}
+                reset={reset}
+              />
               or
               <Sign 
-                wallet={wallet}
                 version={version}
                 reset={reset}
               />
