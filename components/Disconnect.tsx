@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { ethos } from 'ethos-connect'
+import { PrimaryButton } from '.';
 
 const Disconnect = ({ reset }: { reset: () => void }) => {
     const { wallet } = ethos.useWallet();
@@ -10,12 +11,11 @@ const Disconnect = ({ reset }: { reset: () => void }) => {
     }, [reset, wallet])
 
     return (
-        <button
-            className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+        <PrimaryButton
             onClick={disconnect}
         >
             Sign Out
-        </button>
+        </PrimaryButton>
     )
 }
 

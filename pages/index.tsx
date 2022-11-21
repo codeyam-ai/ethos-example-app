@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { SignInButton, ethos } from "ethos-connect";
 import { useCallback, useEffect, useState } from "react";
-import { Disconnect, Fund, Mint, Sign } from "../components";
+import { Disconnect, Fund, Mint, WalletActions } from "../components";
 
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
@@ -52,7 +52,7 @@ const Home: NextPage = () => {
                 reset={reset}
               />
               or
-              <Sign 
+              <WalletActions 
                 version={version}
                 reset={reset}
               />
