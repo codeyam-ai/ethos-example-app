@@ -1,16 +1,16 @@
 import type { NextPage } from "next";
 import { SignInButton, ethos } from "ethos-connect";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import Sign from "../components/Sign";
 
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
 
+  const [version, setVersion] = useState<number>(0);
   const [funding, setFunding] = useState(false);
   const [fundingSuccess, setFundingSuccess] = useState(false);
   const [fundingError, setFundingError] = useState(false);
   const [nftObjectId, setNftObjectId] = useState(null);
-  const [signSuccess, setSignSuccess] = useState(false);
-  const [signError, setSignError] = useState(false);
 
   const fund = useCallback(async () => {
     if (!wallet || funding) return;
@@ -57,24 +57,14 @@ const Home: NextPage = () => {
     }
   }, [wallet]);
 
-  const sign = useCallback(async () => {
-    const response = await wallet?.sign({ message: "Hello" });
-    if (!response) {
-        setSignError(true);
-    } else {
-        console.log("Sign result: ", response)
-        setSignSuccess(true);
-    }
-    
-  }, [wallet]);
-
   const reset = useCallback(() => {
     setFundingError(false);
     setFundingSuccess(false);
     setNftObjectId(null);
-    setSignSuccess(false);
-    setSignError(false);
+    setVersion(prev => prev + 1)
   }, []);
+
+  useEffect(reset, [wallet?.address, reset])
 
   const disconnect = useCallback(() => {
     reset();
@@ -167,36 +157,11 @@ const Home: NextPage = () => {
                 Mint an NFT
               </button>
               or
-              {signSuccess && (
-                <div className='p-3 pr-12 bg-green-200 text-sm text-center relative'>
-                    <div 
-                        className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
-                        onClick={reset}
-                    >
-                        ✕
-                    </div>
-                    <b>Success!</b>
-                    &nbsp;
-                    Check the developer console to see the result.
-                </div>
-              )}
-              {signError && (
-                <div className='p-3 pr-12 bg-red-200 text-sm text-center relative'>
-                  <div 
-                    className='cursor-pointer rounded-full flex justify-center items-center bg-white w-6 h-6 text-sm absolute top-2 right-2'
-                    onClick={reset}
-                  >
-                    ✕
-                  </div>
-                  Signing did not work. See the developer console for additional information.
-                </div>
-              )}
-              <button
-                className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                onClick={sign}
-              >
-                Sign the message &quot;Hello&quot;
-              </button>
+              <Sign 
+                wallet={wallet}
+                version={version}
+                reset={reset}
+              />
               or
               <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
