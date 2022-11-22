@@ -1,1 +1,1 @@
-export const SUI_8192_CONTRACT = "0xabf452a984499834cc26acfbfd9cf86c66500583"
+export const SUI_8192_CONTRACT = "0xcc9bb9b52c8609eae871da138a78f15d03ce1ec2"
