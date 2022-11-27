@@ -1,5 +1,6 @@
 export { default as PrimaryButton } from './PrimaryButton'
 export { default as Mint } from './Mint'
+export { default as Clone } from './Clone'
 export { default as Fund } from './Fund'
 export { default as Sign } from './Sign'
 export { default as Transfer } from './Transfer'
