@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect'
-import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants'
-import SuccessMessage from './SuccessMessage';
+import { SuccessMessage } from '.';
+import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
-const Modify = ({ version, reset }: { version: number, reset: () => void }) => {
+const Transfer2 = ({ version, reset }: { version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState(null);
 
-    const mintAndModify = useCallback(async () => {
+    const mintAndTransfer2 = useCallback(async () => {
         if (!wallet) return;
     
         try {
-          const transaction = {
+          const mintTransaction = {
             kind: "moveCall" as const,
             data: {
               packageObjectId: ETHOS_EXAMPLE_CONTRACT,
@@ -23,27 +23,26 @@ const Modify = ({ version, reset }: { version: number, reset: () => void }) => {
             },
           };
     
-          const response = await wallet.signAndExecuteTransaction(transaction);
+          const response = await wallet.signAndExecuteTransaction(mintTransaction);
           if (response?.effects?.events) {
             const { newObject: { objectId } } = response.effects.events.find((e) => e.newObject);
             
-            const moveTransaction = {
-                kind: "moveCall" as const,
-                data: {
-                  packageObjectId: ETHOS_EXAMPLE_CONTRACT,
-                  module: "example",
-                  function: "modify",
-                  typeArguments: [],
-                  arguments: [
-                    objectId, 
-                    "What's up?"
-                  ],
-                  gasBudget: 10000,
-                },
+            const transferTransaction = {
+              kind: "moveCall" as const,
+              data: {
+                packageObjectId: ETHOS_EXAMPLE_CONTRACT,
+                module: "example",
+                function: "transfer",
+                typeArguments: [],
+                arguments: [
+                  objectId,
+                  "0x14405eaed227abf06d7368be6501fecf0f6430d1"
+                ],
+                gasBudget: 10000,
+              },
             };
 
-            const moveResponse = await wallet.signAndExecuteTransaction(moveTransaction);
-            console.log("moveResponse", moveResponse)
+            await wallet.signAndExecuteTransaction(transferTransaction);
             setNftObjectId(objectId);
           }  
         } catch (error) {
@@ -65,18 +64,18 @@ const Modify = ({ version, reset }: { version: number, reset: () => void }) => {
                         rel="noreferrer"
                         className='underline font-blue-600' 
                     >
-                        View the NFT you created and modified on the DevNet Explorer 
+                        View the NFT you created and transferred on the DevNet Explorer 
                     </a>
                 </SuccessMessage>
-              )}
-              <button
+            )}
+            <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                onClick={mintAndModify}
-              >
-                Mint and Modify
-              </button>
-          </div>
+                onClick={mintAndTransfer2}
+            >
+                Mint and Transfer 2
+            </button>
+        </div>
     )
 }
 
-export default Modify;
+export default Transfer2;
