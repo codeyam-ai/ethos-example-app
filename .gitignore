@@ -37,3 +37,5 @@ next-env.d.ts
 
 # code editors
 .vscode
+
+/move/build
