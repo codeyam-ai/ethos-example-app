@@ -5,7 +5,7 @@ import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
 const Burn = ({ version, reset }: { version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
-    const [nftObjectId, setNftObjectId] = useState(null);
+    const [transactionId, setTransactionId] = useState<string | null>(null);
 
     const clone = useCallback(async () => {
         if (!wallet) return;
@@ -27,7 +27,7 @@ const Burn = ({ version, reset }: { version: number, reset: () => void }) => {
           if (response?.effects?.events) {
             const { newObject: { objectId } } = response.effects.events.find((e) => e.newObject);
             
-            const cloneTransaction = {
+            const burnTransaction = {
               kind: "moveCall" as const,
               data: {
                 packageObjectId: ETHOS_EXAMPLE_CONTRACT,
@@ -40,9 +40,10 @@ const Burn = ({ version, reset }: { version: number, reset: () => void }) => {
                 gasBudget: 10000,
               },
             };
+            
 
-            await wallet.signAndExecuteTransaction(cloneTransaction);
-            setNftObjectId(objectId)
+            const burnResponse = await wallet.signAndExecuteTransaction(burnTransaction);
+            setTransactionId(burnResponse.effects.transactionDigest)
           }  
         } catch (error) {
           console.log(error);
@@ -50,20 +51,20 @@ const Burn = ({ version, reset }: { version: number, reset: () => void }) => {
     }, [wallet]);
 
     useEffect(() => {
-        setNftObjectId(null)
+      setTransactionId(null)
     }, [version])
 
     return (
         <div className='flex flex-col gap-6'>
-            {nftObjectId && (
+            {transactionId && (
                 <SuccessMessage reset={reset}>
                     <a 
-                        href={`https://explorer.devnet.sui.io/objects/${nftObjectId}`}
+                        href={`https://explorer.sui.io/transactions/${encodeURI(transactionId)}`}
                         target="_blank" 
                         rel="noreferrer"
                         className='underline font-blue-600' 
                     >
-                        View your cloned NFT on the DevNet Explorer 
+                        View NFT burn transaction on the DevNet Explorer
                     </a>
                 </SuccessMessage>
             )}
