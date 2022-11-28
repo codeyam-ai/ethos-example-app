@@ -1,1 +1,1 @@
-export const SUI_8192_CONTRACT = "0xcc9bb9b52c8609eae871da138a78f15d03ce1ec2"
+export const ETHOS_EXAMPLE_CONTRACT = "0xe71d1a6d359778d6f26f6ea1f3a825cf5aed3823"

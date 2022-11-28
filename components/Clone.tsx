@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect'
-import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants'
-import SuccessMessage from './SuccessMessage';
+import { SuccessMessage } from '.';
+import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
-const Modify = ({ version, reset }: { version: number, reset: () => void }) => {
+const Clone = ({ version, reset }: { version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState(null);
 
-    const mintAndModify = useCallback(async () => {
+    const clone = useCallback(async () => {
         if (!wallet) return;
     
         try {
-          const transaction = {
+          const mintTransaction = {
             kind: "moveCall" as const,
             data: {
               packageObjectId: ETHOS_EXAMPLE_CONTRACT,
@@ -23,28 +23,26 @@ const Modify = ({ version, reset }: { version: number, reset: () => void }) => {
             },
           };
     
-          const response = await wallet.signAndExecuteTransaction(transaction);
+          const response = await wallet.signAndExecuteTransaction(mintTransaction);
           if (response?.effects?.events) {
             const { newObject: { objectId } } = response.effects.events.find((e) => e.newObject);
             
-            const moveTransaction = {
-                kind: "moveCall" as const,
-                data: {
-                  packageObjectId: ETHOS_EXAMPLE_CONTRACT,
-                  module: "example",
-                  function: "modify",
-                  typeArguments: [],
-                  arguments: [
-                    objectId, 
-                    "What's up?"
-                  ],
-                  gasBudget: 10000,
-                },
+            const cloneTransaction = {
+              kind: "moveCall" as const,
+              data: {
+                packageObjectId: ETHOS_EXAMPLE_CONTRACT,
+                module: "example",
+                function: "clone",
+                typeArguments: [],
+                arguments: [
+                  objectId
+                ],
+                gasBudget: 10000,
+              },
             };
 
-            const moveResponse = await wallet.signAndExecuteTransaction(moveTransaction);
-            console.log("moveResponse", moveResponse)
-            setNftObjectId(objectId);
+            await wallet.signAndExecuteTransaction(cloneTransaction);
+            setNftObjectId(objectId)
           }  
         } catch (error) {
           console.log(error);
@@ -65,18 +63,18 @@ const Modify = ({ version, reset }: { version: number, reset: () => void }) => {
                         rel="noreferrer"
                         className='underline font-blue-600' 
                     >
-                        View the NFT you created and modified on the DevNet Explorer 
+                        View your cloned NFT on the DevNet Explorer 
                     </a>
                 </SuccessMessage>
-              )}
-              <button
+            )}
+            <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                onClick={mintAndModify}
-              >
-                Mint and Modify
-              </button>
-          </div>
+                onClick={clone}
+            >
+                Clone an NFT
+            </button>
+        </div>
     )
 }
 
-export default Modify;
+export default Clone;
