@@ -1,1 +1,1 @@
-export const ETHOS_EXAMPLE_CONTRACT = "0xe71d1a6d359778d6f26f6ea1f3a825cf5aed3823"
+export const ETHOS_EXAMPLE_CONTRACT = "0xba803e1bb0d5fd9a6617c909bc0d4b87bb3dbe8b"
