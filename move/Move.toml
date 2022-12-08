@@ -1,5 +1,5 @@
 [package]
-name = "example"
+name = "Ethos Example"
 version = "0.0.1"
 
 [dependencies]

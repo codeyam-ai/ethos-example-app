@@ -41,3 +41,10 @@ The `SignInButton` component:
 ```
 
 ...and more!
+
+
+### The Move Contract
+
+You can publish the move contract using the following command:
+
+`sui client publish --gas-budget 10000`
