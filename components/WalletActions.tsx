@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { PrimaryButton, Modify, MergeCoins, Sign, Transfer, Transfer2, Clone, Burn } from '.';
+import { PrimaryButton, Modify, MergeCoins, Sign, Transfer, Transfer2, Clone, Burn, MintCoin, BurnCoin } from '.';
 
 const WalletActions = ({ version, reset }: { version: number, reset: () => void }) => {
     const [showActions, setShowActions] = useState(false);
@@ -36,6 +36,14 @@ const WalletActions = ({ version, reset }: { version: number, reset: () => void 
                         reset={reset}
                     />
                     <Burn
+                        version={version}
+                        reset={reset}
+                    />
+                    <MintCoin
+                        version={version}
+                        reset={reset}
+                    />
+                    <BurnCoin
                         version={version}
                         reset={reset}
                     />
