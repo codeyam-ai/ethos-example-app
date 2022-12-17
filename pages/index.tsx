@@ -32,7 +32,7 @@ const Home: NextPage = () => {
               <code>{wallet.address}</code>
               <div className="place-content-center text-base font-medium text-ethos-primary space-x-1">
                 <div>
-                  Wallet balance: <code>{wallet.contents?.suiBalance}</code>{" "}
+                  Wallet balance: <code>{wallet.contents?.suiBalance.toString()}</code>{" "}
                   Mist
                 </div>
                 <div className="text-xs text-gray-500">
