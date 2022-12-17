@@ -28,8 +28,13 @@ const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
     
           const response = await wallet.signAndExecuteTransaction(signableTransaction);
           if (response?.effects?.events) {
-            const { moveEvent } = response.effects.events.find((e) => e.moveEvent);
-            setNftObjectId(moveEvent.fields.object_id)
+            const moveEventEvent = response.effects.events.find(
+              (e) => ('moveEvent' in e)
+            );
+            if (!moveEventEvent || !('moveEvent' in moveEventEvent)) return;
+
+            const { moveEvent } = moveEventEvent;
+            setNftObjectId(moveEvent.fields?.object_id)
           }  
         } catch (error) {
           console.log(error);

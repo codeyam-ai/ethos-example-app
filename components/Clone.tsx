@@ -5,7 +5,7 @@ import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
 const Clone = ({ version, reset }: { version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
-    const [nftObjectId, setNftObjectId] = useState(null);
+    const [nftObjectId, setNftObjectId] = useState<string | null>(null);
 
     const clone = useCallback(async () => {
         if (!wallet) return;
@@ -25,7 +25,12 @@ const Clone = ({ version, reset }: { version: number, reset: () => void }) => {
     
           const response = await wallet.signAndExecuteTransaction(mintTransaction);
           if (response?.effects?.events) {
-            const { newObject: { objectId } } = response.effects.events.find((e) => e.newObject);
+            const newObjectEvent = response.effects.events.find(
+              (e) => ('newObject' in e)
+            );
+            if (!newObjectEvent || !('newObject' in newObjectEvent)) return;
+
+            const { newObject: { objectId } } = newObjectEvent;
             
             const cloneTransaction = {
               kind: "moveCall" as const,

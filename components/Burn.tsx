@@ -25,7 +25,12 @@ const Burn = ({ version, reset }: { version: number, reset: () => void }) => {
     
           const response = await wallet.signAndExecuteTransaction(mintTransaction);
           if (response?.effects?.events) {
-            const { newObject: { objectId } } = response.effects.events.find((e) => e.newObject);
+            const newObjectEvent = response.effects.events.find(
+              (e) => ('newObject' in e)
+            );
+            if (!newObjectEvent || !('newObject' in newObjectEvent)) return;
+
+            const { newObject: { objectId } } = newObjectEvent;
             
             const burnTransaction = {
               kind: "moveCall" as const,

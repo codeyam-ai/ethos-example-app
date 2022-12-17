@@ -4,7 +4,7 @@ import { SuccessMessage } from '.';
 
 const Transfer = ({ version, reset }: { version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
-    const [nftObjectId, setNftObjectId] = useState(null);
+    const [nftObjectId, setNftObjectId] = useState<string | null>(null);
 
     const mintAndTransfer = useCallback(async () => {
         if (!wallet) return;
@@ -28,8 +28,13 @@ const Transfer = ({ version, reset }: { version: number, reset: () => void }) =>
     
           const response = await wallet.signAndExecuteTransaction(mintTransaction);
           if (response?.effects?.events) {
-            const { moveEvent } = response.effects.events.find((e) => e.moveEvent);
-            const objectId = moveEvent.fields.object_id
+            const moveEventEvent = response.effects.events.find(
+              (e) => ('moveEvent' in e)
+            );
+            if (!moveEventEvent || !('moveEvent' in moveEventEvent)) return;
+
+            const { moveEvent } = moveEventEvent;
+            const objectId = moveEvent.fields?.object_id
 
             const transferTransaction = {
                 kind: "transferObject" as const,

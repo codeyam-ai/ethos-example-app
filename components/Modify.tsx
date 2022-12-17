@@ -5,7 +5,7 @@ import SuccessMessage from './SuccessMessage';
 
 const Modify = ({ version, reset }: { version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
-    const [nftObjectId, setNftObjectId] = useState(null);
+    const [nftObjectId, setNftObjectId] = useState<string | null>(null);
 
     const mintAndModify = useCallback(async () => {
         if (!wallet) return;
@@ -25,7 +25,12 @@ const Modify = ({ version, reset }: { version: number, reset: () => void }) => {
     
           const response = await wallet.signAndExecuteTransaction(transaction);
           if (response?.effects?.events) {
-            const { newObject: { objectId } } = response.effects.events.find((e) => e.newObject);
+            const newObjectEvent = response.effects.events.find(
+              (e) => ('newObject' in e)
+            );
+            if (!newObjectEvent || !('newObject' in newObjectEvent)) return;
+
+            const { newObject: { objectId } } = newObjectEvent;
             
             const moveTransaction = {
                 kind: "moveCall" as const,

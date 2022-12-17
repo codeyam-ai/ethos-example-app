@@ -34,12 +34,12 @@ const Fund = ({ version, reset }: { version: number, reset: () => void }) => {
         <div className='flex flex-col gap-6'>
             {fundingError && (
                 <ErrorMessage reset={reset}>
-                    The faucet did not work. Please try again in a little bit.
+                    <>The faucet did not work. Please try again in a little bit.</>
                 </ErrorMessage>
             )}
             {fundingSuccess && (
                 <SuccessMessage reset={reset}>
-                    Your new balance is {wallet?.contents?.suiBalance} Mist!
+                    <>Your new balance is {wallet?.contents?.suiBalance} Mist!</>
                 </SuccessMessage>
             )}
             <button

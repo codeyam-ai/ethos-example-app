@@ -25,9 +25,17 @@ const Burn = ({ version, reset }: { version: number, reset: () => void }) => {
     
           const response = await wallet.signAndExecuteTransaction(mintTransaction);
           if (response?.effects?.events) {
-            const { coinBalanceChange: { coinObjectId } } = response.effects.events.find(
-              (e) => e.coinBalanceChange && e.coinBalanceChange.coinType === ETHOS_COIN_TYPE
+            const coinEvent = response.effects.events.find(
+              (e) => (
+                'coinBalanceChange' in e &&
+                e.coinBalanceChange && 
+                e.coinBalanceChange.coinType === ETHOS_COIN_TYPE
+              )
             );
+
+            if (!coinEvent || !('coinBalanceChange' in coinEvent)) return;
+
+            const { coinBalanceChange: { coinObjectId } } = coinEvent;
             
             const burnTransaction = {
               kind: "moveCall" as const,
