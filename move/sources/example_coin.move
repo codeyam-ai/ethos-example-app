@@ -14,8 +14,8 @@ module ethos::ethos_example_coin {
         let icon_url = url::new_unsafe(ascii_url);
         let (treasury_cap, metadata) = coin::create_currency<ETHOS_EXAMPLE_COIN>(
             witness, 9, 
-            b"EthosExampleCoin", 
             b"EEC", 
+            b"EthosExampleCoin", 
             b"An example coin made by Ethos", 
             option::some(icon_url), 
             ctx
