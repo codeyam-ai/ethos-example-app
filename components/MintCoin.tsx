@@ -5,7 +5,7 @@ import { ETHOS_EXAMPLE_CONTRACT, ETHOS_COIN_TYPE, ETHOS_EXAMPLE_COIN_TREASURY_CA
 
 const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
-    const [nftObjectId, setNftObjectId] = useState(null);
+    const [nftObjectId, setNftObjectId] = useState<string | null>(null);
 
     const mint = useCallback(async () => {
         if (!wallet) return;
@@ -25,13 +25,22 @@ const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
     
           const response = await wallet.signAndExecuteTransaction(mintTransaction);
           if (response?.effects?.events) {
-            const moveEventEvent = response.effects.events.find(
-                (e) => ('moveEvent' in e)
+            const coinBalanceChangeEvent = response.effects.events.find(
+                (e) => (
+                    ('coinBalanceChange' in e) &&
+                    ('coinType' in e.coinBalanceChange) &&
+                    (e.coinBalanceChange.coinType === ETHOS_COIN_TYPE)
+                )
             );
-            if (!moveEventEvent || !('moveEvent' in moveEventEvent)) return;
 
-            const { moveEvent } = moveEventEvent;
-            setNftObjectId(moveEvent.fields?.object_id)
+            if (!coinBalanceChangeEvent || !('coinBalanceChange' in coinBalanceChangeEvent)) return;
+
+            const { coinBalanceChange } = coinBalanceChangeEvent
+
+            if (!coinBalanceChange || !('coinObjectId' in coinBalanceChange)) return;
+
+            const { coinObjectId } = coinBalanceChange;
+            setNftObjectId(coinObjectId as string)
           }  
         } catch (error) {
           console.log(error);

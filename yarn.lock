@@ -1208,10 +1208,10 @@ esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-ethos-connect@^0.0.59:
-  version "0.0.59"
-  resolved "https://registry.yarnpkg.com/ethos-connect/-/ethos-connect-0.0.59.tgz#3698e58d797ccbf70665112fda4f815cf28cd6bf"
-  integrity sha512-jwzySNakgTchJGEA60mCNd4OZi27yVd9eULC9znqKTe8bnC86rfEEnqTvKOz84qqqQu5ic64PJx2dfARWQYRxw==
+ethos-connect@^0.0.61:
+  version "0.0.61"
+  resolved "https://registry.yarnpkg.com/ethos-connect/-/ethos-connect-0.0.61.tgz#b20a881d54127f847dee0cdc4758649c5e60e90d"
+  integrity sha512-pPgUufLZshtC6MHrD4/mbetzZmFZzhm/VTt/p6KquzZoxMp/yEbIGpAwv95EbpgVMTofQaMaZDpRYj3eWb5f+A==
   dependencies:
     "@mysten/sui.js" "^0.20.0"
     "@mysten/wallet-adapter-all-wallets" "^0.3.0"
