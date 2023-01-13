@@ -18,7 +18,7 @@ const Burn = ({ version, reset }: { version: number, reset: () => void }) => {
               module: "ethos_example_coin",
               function: "mint",
               typeArguments: [],
-              arguments: [ETHOS_EXAMPLE_COIN_TREASURY_CAP, 100000],
+              arguments: [ETHOS_EXAMPLE_COIN_TREASURY_CAP, "100000"],
               gasBudget: 10000,
             },
           };
