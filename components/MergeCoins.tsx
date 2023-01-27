@@ -10,13 +10,15 @@ const MergeCoins = ({ version, reset }: { version: number, reset: () => void }) 
     const mergeCoins = useCallback(async () => {
         if (!wallet) return;
         
-        const inputCoins = wallet.contents.tokens['0x2::sui::SUI'].coins.map((c: any) => c.objectId)
+        let inputCoins = wallet.contents.tokens['0x2::sui::SUI'].coins.map((c: any) => c.objectId)
         if (inputCoins.length < 3) {
             setError("You don't have enough coins to merge them.")
             return;
         } else {
-            inputCoins.pop();
+            console.log("inputCoins0", inputCoins);
+            inputCoins = inputCoins.slice(0, (inputCoins.length + 1) / 2)
         }
+        console.log("inputCoins", inputCoins);
 
         try {
           const payTransaction = {
@@ -24,7 +26,6 @@ const MergeCoins = ({ version, reset }: { version: number, reset: () => void }) 
             data: {
               inputCoins,
               recipient: wallet.address,
-              amounts: ["1000"],
               gasBudget: 10000,
             },
           };

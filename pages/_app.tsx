@@ -9,6 +9,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     // When testing, use our staging link. When in production you may comment this line out.
     // walletAppUrl: 'https://sui-wallet-staging.onrender.com',
     apiKey: "ethos-example-app",
+    preferredWallets: ['Ethos Wallet'],
+    network: 'https://fullnode.testnet.sui.io/'
   };
 
   return (

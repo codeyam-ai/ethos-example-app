@@ -1,3 +1,3 @@
-export const ETHOS_EXAMPLE_CONTRACT = "0x3fa6b088fb699a5f2d500bf09095c63a4c0218a8"
-export const ETHOS_EXAMPLE_COIN_TREASURY_CAP = "0xa32a4267964fed1e018db207c7a94edb50737941"
-export const ETHOS_COIN_TYPE = "0x3fa6b088fb699a5f2d500bf09095c63a4c0218a8::ethos_example_coin::ETHOS_EXAMPLE_COIN"
+export const ETHOS_EXAMPLE_CONTRACT = "0xc4ad151e9216ac7aabe91997cf898d16cfaaae01"
+export const ETHOS_EXAMPLE_COIN_TREASURY_CAP = "0xd3eca3c56dedb80d79c95decff1d07b9f7f0481f"
+export const ETHOS_COIN_TYPE = "0xc4ad151e9216ac7aabe91997cf898d16cfaaae01::ethos_example_coin::ETHOS_EXAMPLE_COIN"
