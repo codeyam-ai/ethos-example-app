@@ -3,6 +3,7 @@ import ExampleIcon from "../icons/ExampleIcon";
 
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
+import { NETWORK } from "../lib/constants";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
@@ -10,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     // walletAppUrl: 'https://sui-wallet-staging.onrender.com',
     apiKey: "ethos-example-app",
     preferredWallets: ['Ethos Wallet'],
-    network: 'https://fullnode.testnet.sui.io/'
+    network: NETWORK
   };
 
   return (
