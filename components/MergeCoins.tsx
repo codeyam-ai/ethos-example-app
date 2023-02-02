@@ -26,7 +26,7 @@ const MergeCoins = ({ version, reset }: { version: number, reset: () => void }) 
             data: {
               inputCoins,
               recipient: wallet.address,
-              gasBudget: 10000,
+              gasBudget: 1000,
             },
           };
     
