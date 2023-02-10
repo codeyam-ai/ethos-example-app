@@ -22,7 +22,7 @@ const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
                 "A sample NFT from Ethos Wallet.",
                 "https://ethoswallet.xyz/assets/images/ethos-email-logo.png",
               ],
-              gasBudget: 10000,
+              gasBudget: 1000,
             },
           };
     
