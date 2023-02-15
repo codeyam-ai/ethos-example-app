@@ -65,7 +65,7 @@ const Modify = ({ version, reset }: { version: number, reset: () => void }) => {
             {nftObjectId && (
                 <SuccessMessage reset={reset}>
                     <a 
-                        href={`https://explorer.devnet.sui.io/objects/${nftObjectId}`}
+                        href={`https://explorer.sui.io/objects/${nftObjectId}`}
                         target="_blank" 
                         rel="noreferrer"
                         className='underline font-blue-600' 
