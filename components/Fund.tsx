@@ -40,7 +40,7 @@ const Fund = ({ version, reset }: { version: number, reset: () => void }) => {
             )}
             {fundingSuccess && (
                 <SuccessMessage reset={reset}>
-                    <>Your new balance is {wallet?.contents?.suiBalance} Mist!</>
+                    <>Your new balance is {wallet?.contents?.suiBalance.toString()} Mist!</>
                 </SuccessMessage>
             )}
             <button
