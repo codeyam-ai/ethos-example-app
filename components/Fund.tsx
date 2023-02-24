@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect'
 import { ErrorMessage, SuccessMessage } from '.';
 import { NETWORK } from '../lib/constants';
+import BigNumber from 'bignumber.js';
 
 const Fund = ({ version, reset }: { version: number, reset: () => void }) => {
     const { wallet } = ethos.useWallet();
@@ -40,7 +41,7 @@ const Fund = ({ version, reset }: { version: number, reset: () => void }) => {
             )}
             {fundingSuccess && (
                 <SuccessMessage reset={reset}>
-                    <>Your new balance is {wallet?.contents?.suiBalance} Mist!</>
+                    <>Your new balance is {wallet?.contents?.suiBalance.toString()} Mist!</>
                 </SuccessMessage>
             )}
             <button
