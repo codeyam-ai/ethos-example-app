@@ -48,3 +48,13 @@ The `SignInButton` component:
 You can publish the move contract using the following command:
 
 `sui client publish --gas-budget 10000`
+
+### Running The Frunt End
+
+`yarn dev`
+
+And then open a browser window to the specified port (e.g. http://localhost:3000)
+
+### Deploying the front end
+
+Simply deploy to the main branch and the live site should update.
