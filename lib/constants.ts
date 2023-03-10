@@ -1,4 +1,4 @@
-export const NETWORK = "DEVNET"
+export const NETWORK = process.env.NETWORK
 export const ETHOS_EXAMPLE_CONTRACT = "0xadbe7d13ba29c529c3e9439e4ca6e62806243753"
 export const ETHOS_EXAMPLE_COIN_TREASURY_CAP = "0x4cb06aad65869b5a1f84cd375bbf5f05c5d398d7"
 export const ETHOS_COIN_TYPE = "0xadbe7d13ba29c529c3e9439e4ca6e62806243753::ethos_example_coin::ETHOS_EXAMPLE_COIN"
