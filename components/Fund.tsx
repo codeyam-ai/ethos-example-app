@@ -3,7 +3,7 @@ import { ethos } from 'ethos-connect'
 import { ErrorMessage, SuccessMessage } from '.';
 import { NETWORK } from '../lib/constants';
 
-const Fund = ({ version, reset }: { version: number, reset: () => void }) => {
+const Fund = () => {
     const { wallet } = ethos.useWallet();
 
     const [funding, setFunding] = useState(false);
@@ -25,11 +25,15 @@ const Fund = ({ version, reset }: { version: number, reset: () => void }) => {
         setFunding(false);
     }, [wallet, funding]);
 
-    useEffect(() => {
+    const reset = useCallback(() => {
         setFunding(false);
         setFundingSuccess(false);
         setFundingError(false);
-    }, [version])
+    }, [])
+
+    useEffect(() => {
+        reset();
+    }, [reset])
 
     return (
         <div className='flex flex-col gap-6'>

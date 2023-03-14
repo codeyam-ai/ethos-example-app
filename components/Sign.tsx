@@ -2,14 +2,14 @@ import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect';
 import { ErrorMessage, SuccessMessage } from '.';
 
-const Sign = ({ version, reset }: {  version: number, reset: () => void }) => {
+const Sign = () => {
     const { wallet } = ethos.useWallet();
 
     const [signSuccess, setSignSuccess] = useState(false);
     const [signError, setSignError] = useState(false);
 
     const sign = useCallback(async () => {
-        const response = await wallet?.sign({ message: "Hello" });
+        const response = await wallet?.signMessage({ message: "Hello" });
         if (!response) {
             setSignError(true);
         } else {
@@ -19,10 +19,14 @@ const Sign = ({ version, reset }: {  version: number, reset: () => void }) => {
         
     }, [wallet]);
 
-    useEffect(() => {
+    const reset = useCallback(() => {
         setSignSuccess(false);
         setSignError(false);
-    }, [version])
+    }, [])
+
+    useEffect(() => {
+        reset();
+    }, [reset])
 
     return (
         <div className='flex flex-col gap-6'>

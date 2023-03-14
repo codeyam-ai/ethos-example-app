@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect'
 import { SuccessMessage } from '.';
 
-const Transfer = ({ version, reset }: { version: number, reset: () => void }) => {
+const Transfer = () => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState<string | null>(null);
 
@@ -54,9 +54,14 @@ const Transfer = ({ version, reset }: { version: number, reset: () => void }) =>
         }
     }, [wallet]);
 
-    useEffect(() => {
+
+    const reset = useCallback(() => {
         setNftObjectId(null)
-    }, [version])
+    }, [])
+
+    useEffect(() => {
+        reset();
+    }, [reset])
 
     return (
         <div className='flex flex-col gap-6'>

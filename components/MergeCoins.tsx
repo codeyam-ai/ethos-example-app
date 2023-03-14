@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect'
 import { ErrorMessage, SuccessMessage } from '.';
 
-const MergeCoins = ({ version, reset }: { version: number, reset: () => void }) => {
+const MergeCoins = () => {
     const { wallet } = ethos.useWallet();
     const [mergedCoinId, setMergedCoinId] = useState<string | undefined>();
     const [error, setError] = useState<string | undefined>()
@@ -38,10 +38,14 @@ const MergeCoins = ({ version, reset }: { version: number, reset: () => void }) 
         }
     }, [wallet]);
 
-    useEffect(() => {
+    const reset = useCallback(() => {
         setError(undefined)
         setMergedCoinId(undefined)
-    }, [version])
+    }, [])
+
+    useEffect(() => {
+        reset();
+    }, [reset])
 
     return (
         <div className='flex flex-col gap-6'>

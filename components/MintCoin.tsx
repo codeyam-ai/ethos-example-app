@@ -3,7 +3,7 @@ import { ethos } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT, ETHOS_COIN_TYPE, ETHOS_EXAMPLE_COIN_TREASURY_CAP } from '../lib/constants';
 
-const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
+const Mint = () => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState<string | null>(null);
 
@@ -47,9 +47,14 @@ const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
         }
     }, [wallet]);
 
-    useEffect(() => {
+    const reset = useCallback(() => {
         setNftObjectId(null)
-    }, [version])
+    }, [])
+
+    useEffect(() => {
+        reset();
+    }, [reset])
+
 
     return (
         <div className='flex flex-col gap-6'>

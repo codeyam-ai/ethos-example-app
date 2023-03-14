@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { PrimaryButton, Modify, MergeCoins, Sign, Transfer, Transfer2, Clone, Burn, MintCoin, BurnCoin } from '.';
 
-const WalletActions = ({ version, reset }: { version: number, reset: () => void }) => {
+const WalletActions = () => {
     const [showActions, setShowActions] = useState(false);
 
     const _toggle = useCallback(() => {
@@ -15,42 +15,15 @@ const WalletActions = ({ version, reset }: { version: number, reset: () => void 
             </PrimaryButton>
             {showActions && (
                 <div className='grid grid-cols-2 gap-6 pt-6'>
-                    <Sign
-                        version={version}
-                        reset={reset}
-                    />
-                    <Clone
-                        version={version}
-                        reset={reset}
-                    />
-                    <Transfer
-                        version={version}
-                        reset={reset}
-                    />
-                    <Transfer2
-                        version={version}
-                        reset={reset}
-                    />
-                    <Modify
-                        version={version}
-                        reset={reset}
-                    />
-                    <Burn
-                        version={version}
-                        reset={reset}
-                    />
-                    <MintCoin
-                        version={version}
-                        reset={reset}
-                    />
-                    <BurnCoin
-                        version={version}
-                        reset={reset}
-                    />
-                    <MergeCoins
-                        version={version}
-                        reset={reset}
-                    />
+                    <Sign />
+                    <Clone />
+                    <Transfer />
+                    <Transfer2 />
+                    <Modify />
+                    <Burn />
+                    <MintCoin />
+                    <BurnCoin />
+                    <MergeCoins />
                 </div>
             )}
         </div>

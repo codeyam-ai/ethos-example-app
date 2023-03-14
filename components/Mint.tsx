@@ -1,32 +1,36 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ethos } from 'ethos-connect'
+import { ethos, Transaction } from 'ethos-connect'
 import { SuccessMessage } from '.';
 
-const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
+const Mint = () => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState(null);
 
     const mint = useCallback(async () => {
-        if (!wallet) return;
+        if (!wallet?.currentAccount) return;
     
         try {
-          const signableTransaction = {
-            kind: "moveCall" as const,
-            data: {
-              packageObjectId: "0x0000000000000000000000000000000000000002",
-              module: "devnet_nft",
-              function: "mint",
-              typeArguments: [],
-              arguments: [
-                "Ethos Example NFT",
-                "A sample NFT from Ethos Wallet.",
-                "https://ethoswallet.xyz/assets/images/ethos-email-logo.png",
-              ],
-              gasBudget: 1000,
-            },
-          };
+          const transaction = new Transaction();
+          transaction.moveCall({
+            target: "0x2::devnet_nft::mint",
+            arguments: [
+              transaction.pure("Ethos Example NFT"),
+              transaction.pure("A sample NFT from Ethos Wallet."),
+              transaction.pure("https://ethoswallet.xyz/assets/images/ethos-email-logo.png"),
+            ]
+          })
+          transaction.setGasBudget(1000);
     
-          const response = await wallet.signAndExecuteTransaction(signableTransaction);
+          const response = await wallet.signAndExecuteTransaction({
+            transaction,
+            account: wallet.currentAccount,
+            chain: 'sui:devnet',
+            options: {
+              requestType: "WaitForLocalExecution"
+            }
+          });
+          console.log("RESPONSE", response);
+          
           if (response?.effects?.events) {
             const moveEventEvent = response.effects.events.find(
               (e) => ('moveEvent' in e)
@@ -41,9 +45,13 @@ const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
         }
     }, [wallet]);
 
-    useEffect(() => {
+    const reset = useCallback(() => {
         setNftObjectId(null)
-    }, [version])
+    }, [])
+
+    useEffect(() => {
+        reset()
+    }, [reset])
 
     return (
         <div className='flex flex-col gap-6'>
