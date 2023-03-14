@@ -23,13 +23,10 @@ const Mint = () => {
     
           const response = await wallet.signAndExecuteTransaction({
             transaction,
-            account: wallet.currentAccount,
-            chain: 'sui:devnet',
-          }, {
-            requestType: "WaitForLocalExecution",
-            contentOptions: {
+            options: {
+              showInput: true,
               showEffects: true,
-              showEvents: true
+              showEvents: true,
             }
           });
           console.log("RESPONSE", response);
