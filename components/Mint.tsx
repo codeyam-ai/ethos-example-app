@@ -25,8 +25,11 @@ const Mint = () => {
             transaction,
             account: wallet.currentAccount,
             chain: 'sui:devnet',
-            options: {
-              requestType: "WaitForLocalExecution"
+          }, {
+            requestType: "WaitForLocalExecution",
+            contentOptions: {
+              showEffects: true,
+              showEvents: true
             }
           });
           console.log("RESPONSE", response);
