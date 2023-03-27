@@ -20,8 +20,8 @@ module ethos::ethos_example_coin {
             option::some(icon_url), 
             ctx
         );
-        transfer::freeze_object(metadata);
-        transfer::share_object(treasury_cap);
+        transfer::public_freeze_object(metadata);
+        transfer::public_share_object(treasury_cap);
     }
 
     public entry fun mint(treasury_cap: &mut TreasuryCap<ETHOS_EXAMPLE_COIN>, amount: u64, ctx: &mut TxContext) {

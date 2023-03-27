@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ethos, Transaction } from 'ethos-connect'
 import { SuccessMessage } from '.';
+import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
 const Transfer = () => {
     const { wallet } = ethos.useWallet();
@@ -12,7 +13,7 @@ const Transfer = () => {
         try {
           const mintTransaction = new Transaction();
           mintTransaction.moveCall({
-            target: "0x2::devnet_nft::mint",
+            target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_nft::mint_to_sender`,
             arguments: [
               mintTransaction.pure("Ethos Example NFT"),
               mintTransaction.pure("A sample NFT from Ethos Wallet."),
