@@ -20,7 +20,6 @@ const Mint = () => {
               transaction.pure("https://ethoswallet.xyz/assets/images/ethos-email-logo.png"),
             ]
           })
-          transaction.setGasBudget(1000);
     
           const response = await wallet.signAndExecuteTransaction({
             transaction,
