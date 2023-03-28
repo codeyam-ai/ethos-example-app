@@ -6,14 +6,6 @@ import { Disconnect, Fund, Mint, WalletActions } from "../components";
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
 
-  const [version, setVersion] = useState<number>(0);
-  
-  const reset = useCallback(() => {
-    setVersion(prev => prev + 1)
-  }, []);
-
-  useEffect(reset, [wallet?.address, reset])
-
   return (
     <div className="flex justify-between items-start">
       <div className="p-12 flex-1">Status: {status}</div>
@@ -42,22 +34,13 @@ const Home: NextPage = () => {
             </div>
             <div className="flex flex-col gap-4">
               First, fund this wallet from the Sui faucet:
-              <Fund
-                version={version}
-                reset={reset}
-              />
+              <Fund />
               then
-              <Mint 
-                version={version}
-                reset={reset}
-              />
+              <Mint />
               or
-              <WalletActions 
-                version={version}
-                reset={reset}
-              />
+              <WalletActions />
               or
-              <Disconnect reset={reset} />
+              <Disconnect />
             </div>
           </div>
         )}

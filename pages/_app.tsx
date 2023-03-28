@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
     // When testing, use our staging link. When in production you may comment this line out.
     // walletAppUrl: 'https://sui-wallet-staging.onrender.com',
-    apiKey: "ethos-example-app",
+    apiKey: process.env.NEXT_PUBLIC_ETHOS_API_KEY,
     preferredWallets: ['Ethos Wallet'],
     network: NETWORK
   };

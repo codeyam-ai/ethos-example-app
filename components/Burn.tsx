@@ -3,7 +3,7 @@ import { ethos } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
-const Burn = ({ version, reset }: { version: number, reset: () => void }) => {
+const Burn = () => {
     const { wallet } = ethos.useWallet();
     const [transactionId, setTransactionId] = useState<string | null>(null);
 
@@ -23,7 +23,7 @@ const Burn = ({ version, reset }: { version: number, reset: () => void }) => {
             },
           };
     
-          const response = await wallet.signAndExecuteTransaction(mintTransaction);
+          const response = await wallet.signAndExecuteTransactionBlock(mintTransaction);
           if (response?.effects?.events) {
             const newObjectEvent = response.effects.events.find(
               (e) => ('newObject' in e)
@@ -55,9 +55,14 @@ const Burn = ({ version, reset }: { version: number, reset: () => void }) => {
         }
     }, [wallet]);
 
-    useEffect(() => {
+    const reset = useCallback(() => {
       setTransactionId(null)
-    }, [version])
+    }, [])
+
+    useEffect(() => {
+        reset();
+    }, [reset])
+
 
     return (
         <div className='flex flex-col gap-6'>

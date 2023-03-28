@@ -2,13 +2,13 @@ import { useCallback } from 'react'
 import { ethos } from 'ethos-connect'
 import { PrimaryButton } from '.';
 
-const Disconnect = ({ reset }: { reset: () => void }) => {
+const Disconnect = () => {
     const { wallet } = ethos.useWallet();
 
     const disconnect = useCallback(() => {
-        reset();
-        wallet?.disconnect();
-    }, [reset, wallet])
+        if (!wallet) return;
+        wallet.disconnect();
+    }, [wallet])
 
     return (
         <PrimaryButton

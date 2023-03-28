@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ethos } from 'ethos-connect'
+import { ethos, Transaction } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT, ETHOS_COIN_TYPE, ETHOS_EXAMPLE_COIN_TREASURY_CAP } from '../lib/constants';
 
-const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
+const Mint = () => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState<string | null>(null);
 
@@ -11,45 +11,43 @@ const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
         if (!wallet) return;
     
         try {
-          const mintTransaction = {
-            kind: "moveCall" as const,
-            data: {
-              packageObjectId: ETHOS_EXAMPLE_CONTRACT,
-              module: "ethos_example_coin",
-              function: "mint",
-              typeArguments: [],
-              arguments: [ETHOS_EXAMPLE_COIN_TREASURY_CAP, "100000"],
-              gasBudget: 10000,
-            },
-          };
+          const transaction = new Transaction();
+          transaction.moveCall({
+            target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_coin::mint`,
+            arguments: [
+                transaction.object(ETHOS_EXAMPLE_COIN_TREASURY_CAP),
+                transaction.pure("100000")
+            ]
+          })
     
-          const response = await wallet.signAndExecuteTransaction(mintTransaction);
-          if (response?.effects?.events) {
-            const coinBalanceChangeEvent = response.effects.events.find(
-                (e) => (
-                    ('coinBalanceChange' in e) &&
-                    ('coinType' in e.coinBalanceChange) &&
-                    (e.coinBalanceChange.coinType === ETHOS_COIN_TYPE)
-                )
+          const response = await wallet.signAndExecuteTransaction({ 
+            transaction, 
+            options: { 
+                showObjectChanges: true,
+            }
+          });
+          if (response.objectChanges) {
+            const createObjectChange = response.objectChanges.find(
+                (objectChange) => objectChange.type === "created"
             );
 
-            if (!coinBalanceChangeEvent || !('coinBalanceChange' in coinBalanceChangeEvent)) return;
-
-            const { coinBalanceChange } = coinBalanceChangeEvent
-
-            if (!coinBalanceChange || !('coinObjectId' in coinBalanceChange)) return;
-
-            const { coinObjectId } = coinBalanceChange;
-            setNftObjectId(coinObjectId as string)
-          }  
+            if (!!createObjectChange && "objectId" in createObjectChange) {
+                setNftObjectId(createObjectChange.objectId)
+            }
+          }
         } catch (error) {
           console.log(error);
         }
     }, [wallet]);
 
-    useEffect(() => {
+    const reset = useCallback(() => {
         setNftObjectId(null)
-    }, [version])
+    }, [])
+
+    useEffect(() => {
+        reset();
+    }, [reset])
+
 
     return (
         <div className='flex flex-col gap-6'>

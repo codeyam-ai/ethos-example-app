@@ -3,7 +3,7 @@ import { ethos } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
-const Clone = ({ version, reset }: { version: number, reset: () => void }) => {
+const Clone = () => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState<string | null>(null);
 
@@ -54,10 +54,14 @@ const Clone = ({ version, reset }: { version: number, reset: () => void }) => {
         }
     }, [wallet]);
 
-    useEffect(() => {
+    const reset = useCallback(() => {
         setNftObjectId(null)
-    }, [version])
+    }, [])
 
+    useEffect(() => {
+        reset();
+    }, [reset])
+      
     return (
         <div className='flex flex-col gap-6'>
             {nftObjectId && (

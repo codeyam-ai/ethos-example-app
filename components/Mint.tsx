@@ -1,49 +1,53 @@
-import { useCallback, useEffect, useState } from 'react'
-import { ethos } from 'ethos-connect'
+import { createFactory, useCallback, useEffect, useState } from 'react'
+import { ethos, TransactionBlock } from 'ethos-connect'
 import { SuccessMessage } from '.';
+import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
-const Mint = ({ version, reset }: { version: number, reset: () => void }) => {
+const Mint = () => {
     const { wallet } = ethos.useWallet();
-    const [nftObjectId, setNftObjectId] = useState(null);
+    const [nftObjectId, setNftObjectId] = useState<string | undefined>();
 
     const mint = useCallback(async () => {
-        if (!wallet) return;
+        if (!wallet?.currentAccount) return;
     
         try {
-          const signableTransaction = {
-            kind: "moveCall" as const,
-            data: {
-              packageObjectId: "0x0000000000000000000000000000000000000002",
-              module: "devnet_nft",
-              function: "mint",
-              typeArguments: [],
-              arguments: [
-                "Ethos Example NFT",
-                "A sample NFT from Ethos Wallet.",
-                "https://ethoswallet.xyz/assets/images/ethos-email-logo.png",
-              ],
-              gasBudget: 1000,
-            },
-          };
+          const transactionBlock = new TransactionBlock();
+          transactionBlock.moveCall({
+            target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_nft::mint_to_sender`,
+            arguments: [
+              transactionBlock.pure("Ethos Example NFT"),
+              transactionBlock.pure("A sample NFT from Ethos Wallet."),
+              transactionBlock.pure("https://ethoswallet.xyz/assets/images/ethos-email-logo.png"),
+            ]
+          })
     
-          const response = await wallet.signAndExecuteTransaction(signableTransaction);
-          if (response?.effects?.events) {
-            const moveEventEvent = response.effects.events.find(
-              (e) => ('moveEvent' in e)
+          const response = await wallet.signAndExecuteTransactionBlock({
+            transactionBlock,
+            options: {
+              showObjectChanges: true,
+            }
+          });
+          
+          if (response?.objectChanges) {
+            const createdObject = response.objectChanges.find(
+              (e) => e.type === "created"
             );
-            if (!moveEventEvent || !('moveEvent' in moveEventEvent)) return;
-
-            const { moveEvent } = moveEventEvent;
-            setNftObjectId(moveEvent.fields?.object_id)
+            if (createdObject && "objectId" in createdObject) {
+              setNftObjectId(createdObject.objectId)
+            }
           }  
         } catch (error) {
           console.log(error);
         }
     }, [wallet]);
 
+    const reset = useCallback(() => {
+        setNftObjectId(undefined)
+    }, [])
+
     useEffect(() => {
-        setNftObjectId(null)
-    }, [version])
+        reset()
+    }, [reset])
 
     return (
         <div className='flex flex-col gap-6'>
