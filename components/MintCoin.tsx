@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ethos, Transaction } from 'ethos-connect'
+import { ethos, TransactionBlock } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT, ETHOS_COIN_TYPE, ETHOS_EXAMPLE_COIN_TREASURY_CAP } from '../lib/constants';
 
@@ -11,17 +11,17 @@ const Mint = () => {
         if (!wallet) return;
     
         try {
-          const transaction = new Transaction();
-          transaction.moveCall({
+          const transactionBlock = new TransactionBlock();
+          transactionBlock.moveCall({
             target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_coin::mint`,
             arguments: [
-                transaction.object(ETHOS_EXAMPLE_COIN_TREASURY_CAP),
-                transaction.pure("100000")
+                transactionBlock.object(ETHOS_EXAMPLE_COIN_TREASURY_CAP),
+                transactionBlock.pure("100000")
             ]
           })
     
-          const response = await wallet.signAndExecuteTransaction({ 
-            transaction, 
+          const response = await wallet.signAndExecuteTransactionBlock({ 
+            transactionBlock, 
             options: { 
                 showObjectChanges: true,
             }

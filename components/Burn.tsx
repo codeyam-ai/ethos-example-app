@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ethos } from 'ethos-connect'
+import { ethos, TransactionBlock } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
@@ -11,44 +11,43 @@ const Burn = () => {
         if (!wallet) return;
     
         try {
-          const mintTransaction = {
-            kind: "moveCall" as const,
-            data: {
-              packageObjectId: ETHOS_EXAMPLE_CONTRACT,
-              module: "example",
-              function: "mint",
-              typeArguments: [],
-              arguments: [],
-              gasBudget: 10000,
-            },
-          };
+          const transactionBlock = new TransactionBlock();
+          transactionBlock.moveCall({
+            target: `${ETHOS_EXAMPLE_CONTRACT}::example::mint`
+          })
+          
     
-          const response = await wallet.signAndExecuteTransactionBlock(mintTransaction);
-          if (response?.effects?.events) {
-            const newObjectEvent = response.effects.events.find(
-              (e) => ('newObject' in e)
+          const response = await wallet.signAndExecuteTransactionBlock({ 
+            transactionBlock,
+            options: {
+              showObjectChanges: true,
+            }
+          });
+          if (response?.objectChanges) {
+            const newObject = response.objectChanges.find(
+              (e) => e.type === "created"
             );
-            if (!newObjectEvent || !('newObject' in newObjectEvent)) return;
-
-            const { newObject: { objectId } } = newObjectEvent;
             
-            const burnTransaction = {
-              kind: "moveCall" as const,
-              data: {
-                packageObjectId: ETHOS_EXAMPLE_CONTRACT,
-                module: "example",
-                function: "burn",
-                typeArguments: [],
-                arguments: [
-                  objectId
-                ],
-                gasBudget: 10000,
-              },
-            };
+            if (!newObject || !("objectId" in newObject)) return;
+            
+            const { objectId } = newObject;
+            
+            const burnTransaction = new TransactionBlock();
+            burnTransaction.moveCall({
+              target: `${ETHOS_EXAMPLE_CONTRACT}::example::burn`,
+              arguments: [
+                burnTransaction.object(objectId)
+              ]
+            });
             
 
-            const burnResponse = await wallet.signAndExecuteTransaction(burnTransaction);
-            setTransactionId(burnResponse.effects.transactionDigest)
+            const burnResponse = await wallet.signAndExecuteTransactionBlock({
+              transactionBlock: burnTransaction,
+              options: {
+                showEffects: true,
+              }
+            });
+            setTransactionId(burnResponse?.effects?.transactionDigest || null)
           }  
         } catch (error) {
           console.log(error);

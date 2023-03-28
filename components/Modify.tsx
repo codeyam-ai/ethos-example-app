@@ -8,52 +8,52 @@ const Modify = () => {
     const [nftObjectId, setNftObjectId] = useState<string | null>(null);
 
     const mintAndModify = useCallback(async () => {
-        if (!wallet) return;
+        // if (!wallet) return;
     
-        try {
-          const transaction = {
-            kind: "moveCall" as const,
-            data: {
-              packageObjectId: ETHOS_EXAMPLE_CONTRACT,
-              module: "example",
-              function: "mint",
-              typeArguments: [],
-              arguments: [],
-              gasBudget: 10000,
-            },
-          };
+        // try {
+        //   const transaction = {
+        //     kind: "moveCall" as const,
+        //     data: {
+        //       packageObjectId: ETHOS_EXAMPLE_CONTRACT,
+        //       module: "example",
+        //       function: "mint",
+        //       typeArguments: [],
+        //       arguments: [],
+        //       gasBudget: 10000,
+        //     },
+        //   };
     
-          const response = await wallet.signAndExecuteTransaction(transaction);
-          if (response?.effects?.events) {
-            const newObjectEvent = response.effects.events.find(
-              (e) => ('newObject' in e)
-            );
-            if (!newObjectEvent || !('newObject' in newObjectEvent)) return;
+        //   const response = await wallet.signAndExecuteTransaction(transaction);
+        //   if (response?.effects?.events) {
+        //     const newObjectEvent = response.effects.events.find(
+        //       (e) => ('newObject' in e)
+        //     );
+        //     if (!newObjectEvent || !('newObject' in newObjectEvent)) return;
 
-            const { newObject: { objectId } } = newObjectEvent;
+        //     const { newObject: { objectId } } = newObjectEvent;
             
-            const moveTransaction = {
-                kind: "moveCall" as const,
-                data: {
-                  packageObjectId: ETHOS_EXAMPLE_CONTRACT,
-                  module: "example",
-                  function: "modify",
-                  typeArguments: [],
-                  arguments: [
-                    objectId, 
-                    "What's up?"
-                  ],
-                  gasBudget: 10000,
-                },
-            };
+        //     const moveTransaction = {
+        //         kind: "moveCall" as const,
+        //         data: {
+        //           packageObjectId: ETHOS_EXAMPLE_CONTRACT,
+        //           module: "example",
+        //           function: "modify",
+        //           typeArguments: [],
+        //           arguments: [
+        //             objectId, 
+        //             "What's up?"
+        //           ],
+        //           gasBudget: 10000,
+        //         },
+        //     };
 
-            const moveResponse = await wallet.signAndExecuteTransaction(moveTransaction);
-            console.log("moveResponse", moveResponse)
-            setNftObjectId(objectId);
-          }  
-        } catch (error) {
-          console.log(error);
-        }
+        //     const moveResponse = await wallet.signAndExecuteTransaction(moveTransaction);
+        //     console.log("moveResponse", moveResponse)
+        //     setNftObjectId(objectId);
+        //   }  
+        // } catch (error) {
+        //   console.log(error);
+        // }
     }, [wallet]);
 
     const reset = useCallback(() => {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ethos } from 'ethos-connect'
+import { ethos, TransactionBlock } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
@@ -11,42 +11,36 @@ const Clone = () => {
         if (!wallet) return;
     
         try {
-          const mintTransaction = {
-            kind: "moveCall" as const,
-            data: {
-              packageObjectId: ETHOS_EXAMPLE_CONTRACT,
-              module: "example",
-              function: "mint",
-              typeArguments: [],
-              arguments: [],
-              gasBudget: 10000,
-            },
-          };
+          const mintTransactionBlock = new TransactionBlock(); 
+          mintTransactionBlock.moveCall({
+            target: `${ETHOS_EXAMPLE_CONTRACT}::example::mint`
+          })
     
-          const response = await wallet.signAndExecuteTransaction(mintTransaction);
-          if (response?.effects?.events) {
-            const newObjectEvent = response.effects.events.find(
-              (e) => ('newObject' in e)
+          const response = await wallet.signAndExecuteTransactionBlock({
+            transactionBlock: mintTransactionBlock,
+            options: {
+              showObjectChanges: true,
+            }
+          });
+          if (response?.objectChanges) {
+            const newObjectEvent = response.objectChanges.find(
+              (e) => e.type === "created"
             );
-            if (!newObjectEvent || !('newObject' in newObjectEvent)) return;
+            if (!newObjectEvent || !('objectId' in newObjectEvent)) return;
 
-            const { newObject: { objectId } } = newObjectEvent;
+            const { objectId } = newObjectEvent;
             
-            const cloneTransaction = {
-              kind: "moveCall" as const,
-              data: {
-                packageObjectId: ETHOS_EXAMPLE_CONTRACT,
-                module: "example",
-                function: "clone",
-                typeArguments: [],
-                arguments: [
-                  objectId
-                ],
-                gasBudget: 10000,
-              },
-            };
+            const cloneTransactionBlock = new TransactionBlock();
+            cloneTransactionBlock.moveCall({
+              target: `${ETHOS_EXAMPLE_CONTRACT}::example::clone`,
+              arguments: [
+                cloneTransactionBlock.object(objectId)
+              ]
+            });
 
-            await wallet.signAndExecuteTransaction(cloneTransaction);
+            await wallet.signAndExecuteTransactionBlock({
+              transactionBlock: cloneTransactionBlock
+            });
             setNftObjectId(objectId)
           }  
         } catch (error) {

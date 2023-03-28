@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ethos } from 'ethos-connect'
+import { ethos, TransactionBlock } from 'ethos-connect'
 import { SuccessMessage } from '.';
-import { ETHOS_EXAMPLE_CONTRACT, ETHOS_EXAMPLE_COIN_TREASURY_CAP, ETHOS_COIN_TYPE } from '../lib/constants';
+import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
 const Burn = () => {
     const { wallet } = ethos.useWallet();
@@ -11,50 +11,43 @@ const Burn = () => {
         if (!wallet) return;
     
         try {
-          const mintTransaction = {
-            kind: "moveCall" as const,
-            data: {
-              packageObjectId: ETHOS_EXAMPLE_CONTRACT,
-              module: "ethos_example_coin",
-              function: "mint",
-              typeArguments: [],
-              arguments: [ETHOS_EXAMPLE_COIN_TREASURY_CAP, "100000"],
-              gasBudget: 10000,
-            },
-          };
+          const transactionBlock = new TransactionBlock();
+          transactionBlock.moveCall({
+            target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_coin::mint`
+          })
+          
     
-          const response = await wallet.signAndExecuteTransaction(mintTransaction);
-          if (response?.effects?.events) {
-            const coinEvent = response.effects.events.find(
-              (e) => (
-                'coinBalanceChange' in e &&
-                e.coinBalanceChange && 
-                e.coinBalanceChange.coinType === ETHOS_COIN_TYPE
-              )
+          const response = await wallet.signAndExecuteTransactionBlock({ 
+            transactionBlock,
+            options: {
+              showObjectChanges: true,
+            }
+          });
+          if (response?.objectChanges) {
+            const newObject = response.objectChanges.find(
+              (e) => e.type === "created"
             );
-
-            if (!coinEvent || !('coinBalanceChange' in coinEvent)) return;
-
-            const { coinBalanceChange: { coinObjectId } } = coinEvent;
             
-            const burnTransaction = {
-              kind: "moveCall" as const,
-              data: {
-                packageObjectId: ETHOS_EXAMPLE_CONTRACT,
-                module: "ethos_example_coin",
-                function: "burn",
-                typeArguments: [],
-                arguments: [
-                  ETHOS_EXAMPLE_COIN_TREASURY_CAP,
-                  coinObjectId                  
-                ],
-                gasBudget: 10000,
-              },
-            };
+            if (!newObject || !("objectId" in newObject)) return;
+            
+            const { objectId } = newObject;
+            
+            const burnTransaction = new TransactionBlock();
+            burnTransaction.moveCall({
+              target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_coin::burn`,
+              arguments: [
+                burnTransaction.object(objectId)
+              ]
+            });
             
 
-            const burnResponse = await wallet.signAndExecuteTransaction(burnTransaction);
-            setTransactionId(burnResponse.effects.transactionDigest)
+            const burnResponse = await wallet.signAndExecuteTransactionBlock({
+              transactionBlock: burnTransaction,
+              options: {
+                showEffects: true,
+              }
+            });
+            setTransactionId(burnResponse?.effects?.transactionDigest || null)
           }  
         } catch (error) {
           console.log(error);
@@ -62,7 +55,7 @@ const Burn = () => {
     }, [wallet]);
 
     const reset = useCallback(() => {
-        setTransactionId(null)
+      setTransactionId(null)
     }, [])
 
     useEffect(() => {

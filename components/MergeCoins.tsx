@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ethos } from 'ethos-connect'
+import { ethos, TransactionBlock } from 'ethos-connect'
 import { ErrorMessage, SuccessMessage } from '.';
 
 const MergeCoins = () => {
@@ -8,34 +8,34 @@ const MergeCoins = () => {
     const [error, setError] = useState<string | undefined>()
 
     const mergeCoins = useCallback(async () => {
-        if (!wallet) return;
+    //     if (!wallet) return;
         
-        let inputCoins = wallet.contents.tokens['0x2::sui::SUI'].coins.map((c: any) => c.objectId)
-        if (inputCoins.length < 3) {
-            setError("You don't have enough coins to merge them.")
-            return;
-        } else {
-            console.log("inputCoins0", inputCoins);
-            inputCoins = inputCoins.slice(0, (inputCoins.length + 1) / 2)
-        }
-        console.log("inputCoins", inputCoins);
+    //     let inputCoins = wallet.contents.tokens['0x2::sui::SUI'].coins.map((c: any) => c.objectId)
+    //     if (inputCoins.length < 3) {
+    //         setError("You don't have enough coins to merge them.")
+    //         return;
+    //     } else {
+    //         console.log("inputCoins0", inputCoins);
+    //         inputCoins = inputCoins.slice(0, (inputCoins.length + 1) / 2)
+    //     }
+    //     console.log("inputCoins", inputCoins);
 
-        try {
-          const payTransaction = {
-            kind: "payAllSui" as const,
-            data: {
-              inputCoins,
-              recipient: wallet.address,
-              gasBudget: 1000,
-            },
-          };
+    //     try {
+    //       const payTransaction = {
+    //         kind: "payAllSui" as const,
+    //         data: {
+    //           inputCoins,
+    //           recipient: wallet.address,
+    //           gasBudget: 1000,
+    //         },
+    //       };
     
-          const response = await wallet.signAndExecuteTransaction(payTransaction);
-          const mergedCoinId = response.effects.mutated?.[0]?.reference?.objectId;
-          setMergedCoinId(mergedCoinId);
-        } catch (error) {
-          console.log(error);
-        }
+    //       const response = await wallet.signAndExecuteTransaction(payTransaction);
+    //       const mergedCoinId = response.effects.mutated?.[0]?.reference?.objectId;
+    //       setMergedCoinId(mergedCoinId);
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
     }, [wallet]);
 
     const reset = useCallback(() => {
