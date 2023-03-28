@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ethos, Transaction } from 'ethos-connect'
+import { ethos, TransactionBlock } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
@@ -11,53 +11,28 @@ const Transfer = () => {
         if (!wallet) return;
     
         try {
-          const mintTransaction = new Transaction();
-          mintTransaction.moveCall({
+          const mintTransactionBlock = new TransactionBlock();
+          const nft = mintTransactionBlock.moveCall({
             target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_nft::mint_to_sender`,
             arguments: [
-              mintTransaction.pure("Ethos Example NFT"),
-              mintTransaction.pure("A sample NFT from Ethos Wallet."),
-              mintTransaction.pure("https://ethoswallet.xyz/assets/images/ethos-email-logo.png")
+              mintTransactionBlock.pure("Ethos Example NFT"),
+              mintTransactionBlock.pure("A sample NFT from Ethos Wallet."),
+              mintTransactionBlock.pure("https://ethoswallet.xyz/assets/images/ethos-email-logo.png")
             ]
           })
+          mintTransactionBlock.transferObjects(
+            [nft],
+            mintTransactionBlock.pure('0x5c48ea29ac876110006a80d036c5454cae3d1ad1')
+          )
     
-          const response = await wallet.signAndExecuteTransaction({
-            transaction: mintTransaction,
+          const response = await wallet.signAndExecuteTransactionBlock({
+            transactionBlock: mintTransactionBlock,
             options: {
-              showInput: true,
-              showEffects: true,
-              showEvents: true,
+              showObjectChanges: true,
             }
           });
-          console.log("response", response)
-
-          if (response?.effects?.events) {
-            const moveEventEvent = response.effects.events.find(
-              (e) => ('moveEvent' in e)
-            );
-            if (!moveEventEvent || !('moveEvent' in moveEventEvent)) return;
-
-            const { moveEvent } = moveEventEvent;
-            const objectId = moveEvent.fields?.object_id
-
-            const transferTransaction = new Transaction();
-            transferTransaction.transferObjects(
-              [transferTransaction.object(objectId)], 
-              transferTransaction.pure('0x5c48ea29ac876110006a80d036c5454cae3d1ad1')
-            )
-            transferTransaction.setGasBudget(1000);
-
-            const transferResponse = await wallet.signAndExecuteTransaction({
-              transaction: transferTransaction,
-              options: {
-                showInput: true,
-                showEffects: true,
-                showEvents: true,
-              }
-            });
-            console.log("transferResponse", transferResponse)
-            setNftObjectId(objectId);
-          }  
+          
+          console.log("RESPONSE", response)  
         } catch (error) {
           console.log(error);
         }

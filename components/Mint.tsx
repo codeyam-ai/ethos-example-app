@@ -1,44 +1,40 @@
-import { useCallback, useEffect, useState } from 'react'
-import { ethos, Transaction } from 'ethos-connect'
+import { createFactory, useCallback, useEffect, useState } from 'react'
+import { ethos, TransactionBlock } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 
 const Mint = () => {
     const { wallet } = ethos.useWallet();
-    const [nftObjectId, setNftObjectId] = useState(null);
+    const [nftObjectId, setNftObjectId] = useState<string | undefined>();
 
     const mint = useCallback(async () => {
         if (!wallet?.currentAccount) return;
     
         try {
-          const transaction = new Transaction();
-          transaction.moveCall({
+          const transactionBlock = new TransactionBlock();
+          transactionBlock.moveCall({
             target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_nft::mint_to_sender`,
             arguments: [
-              transaction.pure("Ethos Example NFT"),
-              transaction.pure("A sample NFT from Ethos Wallet."),
-              transaction.pure("https://ethoswallet.xyz/assets/images/ethos-email-logo.png"),
+              transactionBlock.pure("Ethos Example NFT"),
+              transactionBlock.pure("A sample NFT from Ethos Wallet."),
+              transactionBlock.pure("https://ethoswallet.xyz/assets/images/ethos-email-logo.png"),
             ]
           })
     
-          const response = await wallet.signAndExecuteTransaction({
-            transaction,
+          const response = await wallet.signAndExecuteTransactionBlock({
+            transactionBlock,
             options: {
-              showInput: true,
-              showEffects: true,
-              showEvents: true,
+              showObjectChanges: true,
             }
           });
-          console.log("RESPONSE", response);
           
-          if (response?.effects?.events) {
-            const moveEventEvent = response.effects.events.find(
-              (e) => ('moveEvent' in e)
+          if (response?.objectChanges) {
+            const createdObject = response.objectChanges.find(
+              (e) => e.type === "created"
             );
-            if (!moveEventEvent || !('moveEvent' in moveEventEvent)) return;
-
-            const { moveEvent } = moveEventEvent;
-            setNftObjectId(moveEvent.fields?.object_id)
+            if (createdObject && "objectId" in createdObject) {
+              setNftObjectId(createdObject.objectId)
+            }
           }  
         } catch (error) {
           console.log(error);
@@ -46,7 +42,7 @@ const Mint = () => {
     }, [wallet]);
 
     const reset = useCallback(() => {
-        setNftObjectId(null)
+        setNftObjectId(undefined)
     }, [])
 
     useEffect(() => {

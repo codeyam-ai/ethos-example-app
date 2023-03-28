@@ -23,7 +23,7 @@ const Burn = () => {
             },
           };
     
-          const response = await wallet.signAndExecuteTransaction(mintTransaction);
+          const response = await wallet.signAndExecuteTransactionBlock(mintTransaction);
           if (response?.effects?.events) {
             const newObjectEvent = response.effects.events.find(
               (e) => ('newObject' in e)
