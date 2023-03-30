@@ -26,6 +26,7 @@ const Mint = () => {
                 showObjectChanges: true,
             }
           });
+
           if (response.objectChanges) {
             const createObjectChange = response.objectChanges.find(
                 (objectChange) => objectChange.type === "created"

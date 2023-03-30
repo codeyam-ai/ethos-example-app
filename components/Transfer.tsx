@@ -13,7 +13,7 @@ const Transfer = () => {
         try {
           const mintTransactionBlock = new TransactionBlock();
           const nft = mintTransactionBlock.moveCall({
-            target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_nft::mint_to_sender`,
+            target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_nft::mint`,
             arguments: [
               mintTransactionBlock.pure("Ethos Example NFT"),
               mintTransactionBlock.pure("A sample NFT from Ethos Wallet."),
@@ -22,7 +22,7 @@ const Transfer = () => {
           })
           mintTransactionBlock.transferObjects(
             [nft],
-            mintTransactionBlock.pure('0x5c48ea29ac876110006a80d036c5454cae3d1ad1')
+            mintTransactionBlock.pure('0xb0e24ba1afc3d2f5e348b569e72e94cf20ec2cecf3cd27edea1c3ad628e5374c', 'address')
           )
     
           const response = await wallet.signAndExecuteTransactionBlock({
@@ -32,7 +32,15 @@ const Transfer = () => {
             }
           });
           
-          console.log("RESPONSE", response)  
+          if (response.objectChanges) {
+            const createObjectChange = response.objectChanges.find(
+                (objectChange) => objectChange.type === "created"
+            );
+
+            if (!!createObjectChange && "objectId" in createObjectChange) {
+                setNftObjectId(createObjectChange.objectId)
+            }
+          } 
         } catch (error) {
           console.log(error);
         }
