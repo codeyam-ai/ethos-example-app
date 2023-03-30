@@ -18,12 +18,12 @@ const WalletActions = () => {
                     <Sign />
                     <Clone />
                     <Transfer />
-                    <Transfer2 />
-                    <Modify />
+                    {/* <Transfer2 /> */}
+                    {/* <Modify /> */}
                     <Burn />
                     <MintCoin />
                     <BurnCoin />
-                    <MergeCoins />
+                    {/* <MergeCoins /> */}
                 </div>
             )}
         </div>
