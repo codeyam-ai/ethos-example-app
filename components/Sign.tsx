@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
+import nacl from 'tweetnacl'
+
 import { ethos } from 'ethos-connect';
+import { verifyMessage, IntentScope } from '@mysten/sui.js';
 import { ErrorMessage, SuccessMessage } from '.';
 
 const Sign = () => {
@@ -14,6 +17,11 @@ const Sign = () => {
             setSignError(true);
         } else {
             console.log("Sign result: ", response)
+
+            const { messageBytes, signature } = response;
+            const verified = await verifyMessage(messageBytes, signature, IntentScope.PersonalMessage);
+            console.log("Message verified: ", verified)
+            
             setSignSuccess(true);
         }
         
