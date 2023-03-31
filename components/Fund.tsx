@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect'
 import { ErrorMessage, SuccessMessage } from '.';
-import { NETWORK, FAUCET } from '../lib/constants';
+import { NETWORK } from '../lib/constants';
 
 const Fund = () => {
     const { wallet } = ethos.useWallet();
@@ -12,11 +12,11 @@ const Fund = () => {
 
     const fund = useCallback(async () => {
         if (!wallet || funding) return;
-    
+
         setFunding(true);
         setFundingError(false);
         try {
-            await ethos.dripSui({ address: wallet.address, network: NETWORK , faucet: FAUCET});
+            await ethos.dripSui({ address: wallet.address, network: NETWORK });
             setFundingSuccess(true);
         } catch (e) {
             console.log("Error", e)

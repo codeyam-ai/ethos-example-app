@@ -5,9 +5,94 @@ import { Disconnect, Fund, Mint, WalletActions } from "../components";
 
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
+  const [test, setTest] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  const sendMessageToExtension = (message: any) => {
+    console.log("Sending message to extension:", message);
+    window.parent.postMessage(message, "*");
+  };
+
+  const iframeMessageListener = (event: MessageEvent) => {
+    // Check the origin of the message to ensure it's coming from your extension
+    // if (event.origin !== 'chrome-extension://YOUR_EXTENSION_ID') return;
+    console.log("message received");
+
+    setTest(true);
+    const data = event.data;
+
+    console.log('🌈🌈🌈🌈 data :>> ', data);
+
+
+
+    const ethosWallet = new EthosWallet
+
+    const callback = ({ register }: { register: any }) => {
+      try {
+        register(wallet);
+      } catch (e: any) {
+        console.log(e.message);
+      }
+    }
+
+    window.dispatchEvent(
+      new CustomEvent("wallet-standard:register-wallet", {
+        bubbles: false,
+        cancelable: false,
+        detail: callback,
+      })
+    );
+
+    // Handle the message based on its type
+    switch (data.type) {
+      case 'ETHOS_TEST':
+        console.log('Received message from extension:', data);
+        // Perform desired actions
+        break;
+      // Add more cases as needed
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    console.log("Adding message listener");
+    window.addEventListener("message", iframeMessageListener);
+
+    console.log("Sending message to parent");
+    const message = {
+      type: "TEST_FROM_IFRAME",
+      data: "Hello from iframe!",
+    };
+    window.parent.postMessage(message, "*");
+
+    sendMessageToExtension({
+      type: "IFRAME_READY",
+      data: "Iframe is ready to receive messages!",
+    });
+
+    return () => {
+      console.log("Removing message listener");
+      window.removeEventListener("message", iframeMessageListener);
+    };
+  }, []);
+
+
+  useEffect(() => {
+    window.addEventListener('message', iframeMessageListener);
+    setLoaded(true);
+    console.log("loaded!!!");
+
+
+    return () => {
+      window.removeEventListener('message', iframeMessageListener);
+    };
+  }, []);
 
   return (
     <div className="flex justify-between items-start">
+      <div>TEST: {test ? 'true' : 'false'}</div>
+      <div>LOADED: {loaded ? 'true' : 'false'}</div>
       <div className="p-12 flex-1">Status: {status}</div>
 
       <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8 flex-6">
@@ -47,10 +132,10 @@ const Home: NextPage = () => {
       </div>
 
       <div className="p-12 flex-1 flex justify-end">
-        <ethos.components.AddressWidget 
+        <ethos.components.AddressWidget
           excludeButtons={[
             ethos.enums.AddressWidgetButtons.WalletExplorer
-          ]} 
+          ]}
         />
       </div>
     </div>
