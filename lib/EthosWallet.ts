@@ -22,7 +22,7 @@ class EthosWallet {
             connect(input: any): any {
                 console.log("CONNECT");
                 console.log(input);
-                return { accounts };
+                // return { accounts };
             },
         },
         'standard:events': {
@@ -41,3 +41,5 @@ class EthosWallet {
         },
     };
 }
+
+export { EthosWalletAccount, EthosWallet};

@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import { SignInButton, ethos } from "ethos-connect";
 import { useCallback, useEffect, useState } from "react";
 import { Disconnect, Fund, Mint, WalletActions } from "../components";
+import { EthosWallet, EthosWalletAccount } from "../lib/EthosWallet";
 
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
@@ -23,13 +24,21 @@ const Home: NextPage = () => {
 
     console.log('🌈🌈🌈🌈 data :>> ', data);
 
+    const ethosAccount = new EthosWalletAccount()
+    ethosAccount.address = data;
 
+    const ethosWallet = new EthosWallet();
+    ethosWallet.accounts = [ethosAccount];
+    console.log('WALLETT >>', ethosWallet);
+    console.log('ethosAccount >>>', ethosAccount);
 
-    const ethosWallet = new EthosWallet
+    (window as any).ethosWallet = ethosWallet;
 
     const callback = ({ register }: { register: any }) => {
+      console.log('callbaek!!', register, ethosWallet)
       try {
-        register(wallet);
+        const result = register(ethosWallet);
+        console.log('results', result);
       } catch (e: any) {
         console.log(e.message);
       }
@@ -78,14 +87,27 @@ const Home: NextPage = () => {
   }, []);
 
 
+  const WalletStandardAppReadyListener = ({ detail: { register } }: any) => {
+    console.log('WalletStandardAppReadyListener REGISTERED, LISTENING')
+    try {
+      register(wallet);  
+    } catch (e) {
+      console.log('ERROR: wallet-standard:app-ready', e);
+      // window.ReactNativeWebView.postMessage(e.message);
+    }
+  }
+
   useEffect(() => {
     window.addEventListener('message', iframeMessageListener);
     setLoaded(true);
     console.log("loaded!!!");
 
+    console.log('adding wallet standard listener');
+    window.addEventListener('wallet-standard:app-ready', WalletStandardAppReadyListener);
 
     return () => {
       window.removeEventListener('message', iframeMessageListener);
+      window.removeEventListener('wallet-standard:app-ready', WalletStandardAppReadyListener);
     };
   }, []);
 
