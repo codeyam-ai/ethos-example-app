@@ -48,9 +48,9 @@ const Home: NextPage = () => {
 
       <div className="p-12 flex-1 flex justify-end">
         <ethos.components.AddressWidget 
-          excludeButtons={[
-            ethos.enums.AddressWidgetButtons.WalletExplorer
-          ]} 
+          // excludeButtons={[
+          //   ethos.enums.AddressWidgetButtons.WalletExplorer
+          // ]} 
         />
       </div>
     </div>

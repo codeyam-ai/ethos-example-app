@@ -52,7 +52,7 @@ const MergeCoins = () => {
             {mergedCoinId && (
                 <SuccessMessage reset={reset}>
                     <a 
-                        href={`https://explorer.sui.io/objects/${mergedCoinId}`}
+                        href={`https://explorer.sui.io/objects/${mergedCoinId}?network=devnet`}
                         target="_blank" 
                         rel="noreferrer"
                         className='underline font-blue-600' 

@@ -68,7 +68,7 @@ const Burn = () => {
             {transactionId && (
                 <SuccessMessage reset={reset}>
                     <a 
-                        href={`https://explorer.sui.io/transactions/${encodeURI(transactionId)}`}
+                        href={`https://explorer.sui.io/transactions/${encodeURI(transactionId)}?network=devnet`}
                         target="_blank" 
                         rel="noreferrer"
                         className='underline font-blue-600' 
