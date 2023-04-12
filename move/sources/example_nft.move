@@ -5,9 +5,16 @@ module ethos::ethos_example_nft {
     use sui::event;
     use sui::transfer::{public_transfer};
     use sui::tx_context::{sender, Self, TxContext};
+    use sui::coin::{Self, Coin};
+    use sui::sui::SUI;
 
     use sui::package;
     use sui::display;
+
+    const FEE: u64 = 50000;
+    const OWNER: address = @0xb0e24ba1afc3d2f5e348b569e72e94cf20ec2cecf3cd27edea1c3ad628e5374c;
+    
+    const EInvalidFee: u64 = 0;
 
     struct EthosNFT has key, store {
         id: UID,
@@ -91,6 +98,23 @@ module ethos::ethos_example_nft {
         let sender = sender(ctx);
         let nft = mint(name, description, url, ctx);
         public_transfer(nft, sender);
+    }
+
+    public entry fun mint_for_fee(
+        name: vector<u8>,
+        description: vector<u8>,
+        url: vector<u8>,
+        entry_fee: Coin<SUI>,
+        ctx: &mut TxContext
+    ) {
+        let balance = coin::value<SUI>(&entry_fee);
+
+        assert!(balance == FEE, EInvalidFee);
+
+        let sender = sender(ctx);
+        let nft = mint(name, description, url, ctx);
+        public_transfer(nft, sender);
+        public_transfer(entry_fee, OWNER);
     }
 
     /// Transfer `nft` to `recipient`
