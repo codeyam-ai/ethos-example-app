@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import nacl from 'tweetnacl'
 
-import { ethos } from 'ethos-connect';
-import { verifyMessage, IntentScope } from '@mysten/sui.js';
+import { ethos, verifyMessage, IntentScope } from 'ethos-connect';
 import { ErrorMessage, SuccessMessage } from '.';
 
 const Sign = () => {
