@@ -1,4 +1,4 @@
-import { EthosConnectProvider } from "ethos-connect";
+import { Chain, EthosConnectProvider } from "ethos-connect";
 import ExampleIcon from "../icons/ExampleIcon";
 
 import "../styles/globals.css";
@@ -9,7 +9,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
     apiKey: process.env.NEXT_PUBLIC_ETHOS_API_KEY,
     preferredWallets: ['Ethos Wallet'],
-    network: NETWORK
+    network: NETWORK,
+    chain: Chain.SUI_DEVNET
   };
 
   return (
