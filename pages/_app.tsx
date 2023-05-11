@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     apiKey: process.env.NEXT_PUBLIC_ETHOS_API_KEY,
     preferredWallets: ['Ethos Wallet'],
     network: NETWORK,
-    chain: Chain.SUI_DEVNET
+    chain: Chain.SUI_TESTNET
   };
 
   return (

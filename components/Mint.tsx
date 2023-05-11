@@ -54,12 +54,12 @@ const Mint = () => {
             {nftObjectId && (
                 <SuccessMessage reset={reset}>
                     <a 
-                        href={`https://explorer.sui.io/objects/${nftObjectId}?network=devnet`}
+                        href={`https://explorer.sui.io/objects/${nftObjectId}?network=testnet`}
                         target="_blank" 
                         rel="noreferrer"
                         className='underline font-blue-600' 
                     >
-                        View Your NFT on the DevNet Explorer 
+                        View Your NFT on the TestNet Explorer 
                     </a>
                 </SuccessMessage>
             )}

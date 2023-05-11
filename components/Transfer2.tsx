@@ -68,12 +68,12 @@ const Transfer2 = () => {
             {nftObjectId && (
                 <SuccessMessage reset={reset}>
                     <a 
-                        href={`https://explorer.sui.io/objects/${nftObjectId}?network=devnet`}
+                        href={`https://explorer.sui.io/objects/${nftObjectId}?network=testnet`}
                         target="_blank" 
                         rel="noreferrer"
                         className='underline font-blue-600' 
                     >
-                        View the NFT you created and transferred on the DevNet Explorer 
+                        View the NFT you created and transferred on the TestNet Explorer 
                     </a>
                 </SuccessMessage>
             )}

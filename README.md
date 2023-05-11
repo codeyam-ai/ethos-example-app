@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
 ### `index.tsx`
 
-This is the rest of the app. It's a simple app for signing in with a wallet, funding the wallet with the DevNet faucet, and minting an NFT.
+This is the rest of the app. It's a simple app for signing in with a wallet, funding the wallet with the TestNet faucet, and minting an NFT.
 
 It uses the `EthosConnect` hooks:
 

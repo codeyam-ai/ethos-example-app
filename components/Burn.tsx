@@ -66,12 +66,12 @@ const Burn = () => {
             {transactionId && (
                 <SuccessMessage reset={reset}>
                     <a 
-                        href={`https://explorer.sui.io/transactions/${encodeURI(transactionId)}?network=devnet`}
+                        href={`https://explorer.sui.io/transactions/${encodeURI(transactionId)}?network=testnet`}
                         target="_blank" 
                         rel="noreferrer"
                         className='underline font-blue-600' 
                     >
-                        View NFT burn transaction on the DevNet Explorer
+                        View NFT burn transaction on the Testnet Explorer
                     </a>
                 </SuccessMessage>
             )}
