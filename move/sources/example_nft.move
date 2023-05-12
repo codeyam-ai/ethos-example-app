@@ -5,8 +5,6 @@ module ethos::ethos_example_nft {
     use sui::event;
     use sui::transfer::{public_transfer};
     use sui::tx_context::{sender, Self, TxContext};
-    use sui::coin::{Self, Coin};
-    use sui::sui::SUI;
 
     use sui::package;
     use sui::display;
