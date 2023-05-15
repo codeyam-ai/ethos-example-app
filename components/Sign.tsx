@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { ethos, verifyMessage, IntentScope } from 'ethos-connect';
 import { ErrorMessage, SuccessMessage } from '.';
+import { fromB64 } from '@mysten/sui.js';
 
 const Sign = () => {
     const { wallet } = ethos.useWallet();
@@ -10,14 +11,15 @@ const Sign = () => {
     const [signError, setSignError] = useState(false);
 
     const sign = useCallback(async () => {
-        const response = await wallet?.signMessage({ message: "Hello" });
+        const message = new TextEncoder().encode('hello');
+        const response = await wallet?.signMessage({ message });
         if (!response) {
             setSignError(true);
         } else {
             console.log("Sign result: ", response)
 
             const { messageBytes, signature } = response;
-            const verified = await verifyMessage(messageBytes, signature, IntentScope.PersonalMessage);
+            const verified = await verifyMessage(message, signature, IntentScope.PersonalMessage);
             console.log("Message verified: ", verified)
             
             setSignSuccess(true);
