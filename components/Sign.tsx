@@ -5,7 +5,6 @@ import { ErrorMessage, SuccessMessage } from '.';
 
 const Sign = () => {
     const { wallet } = ethos.useWallet();
-    console.log("WALLET", wallet)
 
     const [signSuccess, setSignSuccess] = useState(false);
     const [signError, setSignError] = useState(false);
