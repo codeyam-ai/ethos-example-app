@@ -11,17 +11,13 @@
   "dependencies": {
     "@heroicons/react": "^1.0.6",
     "@mysten/sui.js": "^0.32.1",
-    "cors": "^2.8.5",
     "ethos-connect": "^0.0.162",
     "next": "^13.2.4",
-    "next-connect": "^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-table": "^7.8.0",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.13",
     "@types/node": "18.6.4",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",

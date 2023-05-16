@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { SignInButton, ethos } from "ethos-connect";
-import GetOnchainEarnings from "../components/GetContractEarnings";
+import { useCallback, useEffect, useState } from "react";
+import { Disconnect, Fund, Mint, WalletActions } from "../components";
 
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
@@ -32,7 +33,14 @@ const Home: NextPage = () => {
               </div>
             </div>
             <div className="flex flex-col gap-4">
-              <GetOnchainEarnings />
+              First, fund this wallet from the Sui faucet:
+              <Fund />
+              then
+              <Mint />
+              or
+              <WalletActions />
+              or
+              <Disconnect />
             </div>
           </div>
         )}
