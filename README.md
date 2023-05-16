@@ -49,7 +49,7 @@ You can publish the move contract using the following command:
 
 `sui client publish --gas-budget 10000`
 
-### Running The Frunt End
+### Running The Front End
 
 `yarn dev`
 
