@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { ethos, verifyMessage, IntentScope } from 'ethos-connect';
 import { ErrorMessage, SuccessMessage } from '.';
+import { toB64 } from '@mysten/sui.js';
 
 const Sign = () => {
     const { wallet } = ethos.useWallet();
@@ -20,7 +21,10 @@ const Sign = () => {
             const { signature } = response;
             const verified = await verifyMessage(message, signature, IntentScope.PersonalMessage);
             console.log("Message verified: ", verified)
-            
+
+            const b64Verified = await verifyMessage(toB64(message), signature, IntentScope.PersonalMessage);
+            console.log("Message (Base 64) verified: ", verified)
+
             setSignSuccess(true);
         }
         
