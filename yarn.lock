@@ -1496,10 +1496,10 @@ esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-ethos-connect@^0.0.162:
-  version "0.0.162"
-  resolved "https://registry.yarnpkg.com/ethos-connect/-/ethos-connect-0.0.162.tgz#fba6afa8292a6bfc75027e4e260dd5a7cb928821"
-  integrity sha512-5s8sXgZjHGxYWW/PaHFUXBe4AJh8eQDpjlHlvD9t+fOqzuTMZgVPy49z/ZwIitWwJTpoO0zei9I0BA51kJrO6A==
+ethos-connect@^0.0.171:
+  version "0.0.171"
+  resolved "https://registry.yarnpkg.com/ethos-connect/-/ethos-connect-0.0.171.tgz#3055324beb24b41f63d5cdd71dafcb35c20b5a75"
+  integrity sha512-ZRGIA5HdptqfkCWHWiH6q5Rdcd6blRJn+Hp3TLwzy4lqpLtFdUZAz/0V2otV5VPbsx1EsyT3MRi/Fk00lQMtsw==
   dependencies:
     "@mysten/sui.js" "0.34.0"
     "@mysten/wallet-adapter-all-wallets" "0.5.6"
@@ -1510,7 +1510,7 @@ ethos-connect@^0.0.162:
     cross-fetch "^3.1.5"
     encoding "^0.1.13"
     eslint "^8.36.0"
-    lodash "^4.17.21"
+    lodash-es "^4.17.21"
     qrcode "^1.5.1"
     react-google-recaptcha "^2.1.0"
     store2 "^2.14.2"
@@ -2209,6 +2209,11 @@ locate-path@^6.0.0:
   integrity sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==
   dependencies:
     p-locate "^5.0.0"
+
+lodash-es@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
+  integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
 
 lodash.merge@^4.6.2:
   version "4.6.2"
