@@ -30,6 +30,7 @@ const Sign = () => {
 
             const signingAddress = publicKey.toSuiAddress();
             console.log("Signing address: ", signingAddress)
+            console.log("Visit https://github.com/EthosWallet/ethos-example-app/blob/38698438598015086c3b1f28a807492e91d532b4/components/Sign.tsx#L19 for more details.")
             setSignSuccess(true);
         }
         
