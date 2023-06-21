@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { ethos, verifyMessage, IntentScope } from 'ethos-connect';
 import { ErrorMessage, SuccessMessage } from '.';
-import { toB64 } from '@mysten/sui.js';
+import { Ed25519PublicKey, fromSerializedSignature, toB64 } from '@mysten/sui.js';
 
 const Sign = () => {
     const { wallet } = ethos.useWallet();
@@ -23,8 +23,13 @@ const Sign = () => {
             console.log("Message verified: ", verified)
 
             const b64Verified = await verifyMessage(toB64(message), signature, IntentScope.PersonalMessage);
-            console.log("Message (Base 64) verified: ", verified)
+            console.log("Message (Base 64) verified: ", b64Verified)
 
+            const publicKey = fromSerializedSignature(signature).pubKey;
+            console.log("Public key: ", publicKey)
+
+            const signingAddress = publicKey.toSuiAddress();
+            console.log("Signing address: ", signingAddress)
             setSignSuccess(true);
         }
         
