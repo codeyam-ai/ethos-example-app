@@ -4,6 +4,7 @@ import ExampleIcon from "../icons/ExampleIcon";
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { NETWORK } from "../lib/constants";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
@@ -20,6 +21,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       dappIcon={<ExampleIcon />}
       connectMessage="Your connect message goes here!"
     >
+      <Head>
+        <title>Ethos Connect Example App</title>
+      </Head>
       <Component {...pageProps} />
     </EthosConnectProvider>
   );
