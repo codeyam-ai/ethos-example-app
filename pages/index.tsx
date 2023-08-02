@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import { SignInButton, ethos } from "ethos-connect";
-import { useCallback, useEffect, useState } from "react";
 import { Disconnect, Fund, Mint, WalletActions } from "../components";
 
 const Home: NextPage = () => {

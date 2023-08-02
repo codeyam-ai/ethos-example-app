@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { ethos, verifyMessage, IntentScope } from 'ethos-connect';
+import { ethos } from 'ethos-connect';
 import { ErrorMessage, SuccessMessage } from '.';
-import { Ed25519PublicKey, fromSerializedSignature, toB64 } from '@mysten/sui.js';
+import { verifyPersonalMessage } from '@mysten/sui.js/verify';
+import { toB64 } from '@mysten/sui.js/utils';
 
 const Sign = () => {
     const { wallet } = ethos.useWallet();
@@ -18,20 +19,21 @@ const Sign = () => {
         } else {
             console.log("Sign result: ", response)
 
-            const { signature } = response;
-            const verified = await verifyMessage(message, signature, IntentScope.PersonalMessage);
-            console.log("Message verified: ", verified)
+            const { messageBytes, signature } = response;
 
-            const b64Verified = await verifyMessage(toB64(message), signature, IntentScope.PersonalMessage);
-            console.log("Message (Base 64) verified: ", b64Verified)
+            try {
+                // use verifyTransactionBlock() for transaction blocks
+                const publicKey = await verifyPersonalMessage(message, signature);
+                console.log("Signing public key: ", publicKey)
+                console.log("Signing address: ", publicKey.toSuiAddress());
+                console.log("Verified message: ", messageBytes === toB64(message) && wallet?.address === publicKey.toSuiAddress())
+                console.log("Visit https://github.com/EthosWallet/ethos-example-app/blob/38698438598015086c3b1f28a807492e91d532b4/components/Sign.tsx#L19 for more details.") 
 
-            const publicKey = fromSerializedSignature(signature).pubKey;
-            console.log("Public key: ", publicKey)
-
-            const signingAddress = publicKey.toSuiAddress();
-            console.log("Signing address: ", signingAddress)
-            console.log("Visit https://github.com/EthosWallet/ethos-example-app/blob/38698438598015086c3b1f28a807492e91d532b4/components/Sign.tsx#L19 for more details.")
-            setSignSuccess(true);
+                setSignSuccess(true);
+            } catch (e) {
+                console.error(e);
+                setSignError(true);
+            }
         }
         
     }, [wallet]);
