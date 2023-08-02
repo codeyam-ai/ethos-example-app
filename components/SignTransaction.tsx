@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { ethos , TransactionBlock} from 'ethos-connect';
+import { ethos, TransactionBlock} from 'ethos-connect';
 import { ErrorMessage, SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
+import { verifyTransactionBlock } from '@mysten/sui.js/verify';
+import { fromB64 } from '@mysten/sui.js/utils';
 
 const SignTransaction = () => {
     const { wallet } = ethos.useWallet();
@@ -26,6 +28,23 @@ const SignTransaction = () => {
             setSignError(true);
         } else {
             console.log("Sign result: ", response)
+
+            const { transactionBlockBytes, signature } = response;
+
+            try {
+                // use verifyTransactionBlock() for transaction blocks
+                const publicKey = await verifyTransactionBlock(fromB64(transactionBlockBytes), signature);
+                console.log("Signing public key: ", publicKey)
+                console.log("Signing address: ", publicKey.toSuiAddress());
+                console.log("Verified message: ", wallet?.address === publicKey.toSuiAddress())
+                console.log("Visit https://github.com/EthosWallet/ethos-example-app/blob/38698438598015086c3b1f28a807492e91d532b4/components/Sign.tsx#L19 for more details.") 
+
+                setSignSuccess(true);
+            } catch (e) {
+                console.error(e);
+                setSignError(true);
+            }
+
             setSignSuccess(true);
         }
         
