@@ -27,7 +27,7 @@ const Sign = () => {
                 console.log("Signing public key: ", publicKey)
                 console.log("Signing address: ", publicKey.toSuiAddress());
                 console.log("Verified message: ", messageBytes === toB64(message) && wallet?.address === publicKey.toSuiAddress())
-                console.log("Visit https://github.com/EthosWallet/ethos-example-app/blob/38698438598015086c3b1f28a807492e91d532b4/components/Sign.tsx#L19 for more details.") 
+                console.log("Visit https://github.com/EthosWallet/ethos-example-app/blob/main/components/Sign.tsx#L20 for more details.") 
 
                 setSignSuccess(true);
             } catch (e) {
