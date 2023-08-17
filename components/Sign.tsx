@@ -12,21 +12,23 @@ const Sign = () => {
     const [signError, setSignError] = useState(false);
 
     const sign = useCallback(async () => {
+        if (!wallet) return;
+
         const message = new TextEncoder().encode('hello');
-        const response = await wallet?.signMessage({ message });
+        const response = await wallet.signPersonalMessage({ message });
         if (!response) {
             setSignError(true);
         } else {
             console.log("Sign result: ", response)
 
-            const { messageBytes, signature } = response;
+            const {bytes, signature } = response;
 
             try {
                 // use verifyTransactionBlock() for transaction blocks
                 const publicKey = await verifyPersonalMessage(message, signature);
                 console.log("Signing public key: ", publicKey)
                 console.log("Signing address: ", publicKey.toSuiAddress());
-                console.log("Verified message: ", messageBytes === toB64(message) && wallet?.address === publicKey.toSuiAddress())
+                console.log("Verified message: ", bytes === toB64(message) && wallet?.address === publicKey.toSuiAddress())
                 console.log("Visit https://github.com/EthosWallet/ethos-example-app/blob/main/components/Sign.tsx#L20 for more details.") 
 
                 setSignSuccess(true);

@@ -11,12 +11,12 @@ const Fund = () => {
     const [fundingError, setFundingError] = useState(false);
 
     const fund = useCallback(async () => {
-        if (!wallet || funding) return;
+        if (!wallet || !NETWORK || funding) return;
     
         setFunding(true);
         setFundingError(false);
         try {
-            await ethos.dripSui({ address: wallet.address, network: NETWORK , faucet: FAUCET});
+            await ethos.dripSui({ address: wallet.address, networkName: NETWORK });
             setFundingSuccess(true);
         } catch (e) {
             console.log("Error", e)
