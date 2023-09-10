@@ -7,7 +7,9 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex justify-between items-start">
-      <div className="p-12 flex-1">Status: {status}</div>
+      <div className="p-12 flex-1">
+        <div className={`inline-block px-6 py-3 rounded-2xl ${status === "connected" ? "bg-green-900" : "bg-orange-900" }`}>Status: {status}</div>
+      </div>
 
       <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8 flex-6">
         {!wallet ? (
