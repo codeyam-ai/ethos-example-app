@@ -43,13 +43,13 @@ The `SignInButton` component:
 ...and more!
 
 
-### The Move Contract
+### The Move contract
 
-You can publish the move contract using the following command:
+You can publish the Move contract using the following command:
 
 `sui client publish --gas-budget 10000`
 
-### Running The Frunt End
+### Running the front end
 
 `yarn dev`
 
